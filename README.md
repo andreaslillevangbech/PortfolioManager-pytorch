@@ -10,3 +10,9 @@ https://arxiv.org/pdf/1612.01277.pdf
 References  
 http://rail.eecs.berkeley.edu/deeprlcourse-fa17/f17docs/lecture_5_actor_critic_pdf.pdf  
 https://www.tensorflow.org/agents/tutorials/0_intro_rl   
+
+
+
+Future options  
+https://arxiv.org/abs/1808.09940   
+https://arxiv.org/abs/2002.05780  
