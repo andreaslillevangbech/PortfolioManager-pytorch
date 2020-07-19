@@ -1,4 +1,14 @@
+
+#ignore pycache
+__pycache__/
+# ignore logger
+/app.log
+# sqlite database
+/data.db
+# vs code metadata
+.vscode/
 # virtualenv
 .venv
 venv/
 ENV/
+
