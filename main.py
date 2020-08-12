@@ -1,4 +1,4 @@
-from src.data.datamatrices import DataMatrices
+# from src.data.datamatrices import DataMatrices
 from datetime import datetime
 import json
 import time
@@ -16,3 +16,5 @@ with open("./src/net_config.json") as file:
                     period=config["input"]["global_period"],
                     volume_average_days=config["input"]["volume_average_days"],
                     coin_filter=config["input"]["coin_number"])
+
+

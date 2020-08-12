@@ -1,17 +1,12 @@
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import division
-from src.data.polyniex import Poloniex
-from src.tools.data import get_chart_until_success
+from src.constants import *
+from src.data.poloniex import Poloniex
 import pandas as pd
 from datetime import datetime
 import logging
-from src.config.config import *
-
 
 class CoinList(object):
     def __init__(self, end, volume_average_days=1, volume_forward=0):
-        self._polo = Poloniex(API_KEY,SECRET)
+        self._polo = Poloniex()
         # connect the internet to accees volumes
         vol = self._polo.marketVolume()
         ticker = self._polo.marketTicker()
@@ -25,6 +20,7 @@ class CoinList(object):
                                                            strftime('%Y-%m-%d %H:%M'),
                                                            datetime.fromtimestamp(end-volume_forward).
                                                            strftime('%Y-%m-%d %H:%M')))
+
         for k, v in vol.items():
             if k.startswith("BTC_") or k.endswith("_BTC"):
                 pairs.append(k)
@@ -55,14 +51,11 @@ class CoinList(object):
     def polo(self):
         return self._polo
 
-    def get_chart_until_success(self, pair, start, period, end):
-        return get_chart_until_success(self._polo, pair, start, period, end)
-
     # get several days volume
     def __get_total_volume(self, pair, global_end, days, forward):
         start = global_end-(DAY*days)-forward
         end = global_end-forward
-        chart = self.get_chart_until_success(pair=pair, period=DAY, start=start, end=end)
+        chart = self.get_chart_until_success(polo=self._polo, pair=pair, period=DAY, start=start, end=end)
         result = 0
         for one_day in chart:
             if pair.startswith("BTC_"):
@@ -83,3 +76,17 @@ class CoinList(object):
                 return r.sort_index()
         else:
             return self._df[self._df.volume >= minVolume]
+
+
+    def get_chart_until_success(self, polo, pair, start, period, end):
+        is_connect_success = False
+        chart = {}
+        while not is_connect_success:
+            try:
+                chart = polo.marketChart(pair=pair, start=int(start), period=int(period), end=int(end))
+                is_connect_success = True
+            except Exception as e:
+                print(e)
+        return chart
+
+
