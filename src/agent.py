@@ -2,8 +2,8 @@ import tensorflow as tf
 import numpy as np 
 import pandas as pd
 
-from network import CNN
-from data.replayBuffer import ReplayBuffer
+from src.network import CNN
+from src.data.replayBuffer import ReplayBuffer
 
 class Agent:
 
@@ -13,14 +13,16 @@ class Agent:
         self.batch_size = self.train_config['batch_size']
         self.buffer_bias = self.train_config['buffer_bias']
         
-        self.coin_no = config['coin_no']
-        self.window_size = config['window_size']
-        self.global_period = config["global_period"]
-        self.feature_no = config['feature_no']
+        self.input_config = config['input']
+        self.coin_no =self.input_config['coin_no']
+        self.window_size = self.input_config['window_size']
+        self.global_period = self.input_config["global_period"]
+        self.feature_no = self.input_config['feature_no']
         
+        # self.no_periods should be equal to len(global data matrix)
         self.no_periods = 150
         
-        self.commission_ratio = config["trading_consumption"]
+        self.commission_ratio = config['trading']["trading_consumption"]
         
         #Just make something random
         self.global_data = tf.random.uniform(shape = (self.feature_no, self.coin_no, self.no_periods))
@@ -39,13 +41,13 @@ class Agent:
         
         
         self.model = CNN(
-            config['coin_no'], 
-            config['window_size'], 
-            config['feature_no'], 
+            self.coin_no, 
+            self.window_size,
+            self.feature_no,
             config['training']['batch_size']
         )
         
-        self.divide_data(config['test_portion']) # This gives the indekses of the training and test data
+        self.divide_data(config['input']['test_portion']) # This gives the indekses of the training and test data
         
         # This needs to be written such that it gets arguments from config, like sample bias (geo dist)
         end_index = self._train_ind[-1]
@@ -102,7 +104,15 @@ class Agent:
 
                 # You can add a log between steps here
                 # Both manually and with tensorboard
+
+    def log_between_steps(self, step):
+        pass
+
+
+
+
             
+
     def next_batch(self):
         """
         @:return: the next batch of training sample. The sample is a dictionary
@@ -112,7 +122,6 @@ class Agent:
         """
         batch = self.pack_samples([exp.state_index for exp in self.__replay_buffer.next_experience_batch()])
         return batch
-
 
     def pack_samples(self, indexs):
         self.indexs = indexs
@@ -127,11 +136,15 @@ class Agent:
         y = M[:, :, :, -1] / M[:, 0, None, :, -2]     # y_{t+1} obtained by dividing all features by prev close price
         return {"X": X, "y": y, "last_w": last_w, "setw": setw}
 
-
     # volume in y is the volume in next access period
     def get_submatrix(self, ind):
         return self.global_data[:, :, ind-(self.window_size):ind+1]
 
+    def get_test_set(self):
+        return self.__pack_samples(self.test_indices)
+
+    def get_training_set(self):
+        return self.__pack_samples(self._train_ind[:-self._window_size])
 
     def divide_data(self, test_portion, portion_reversed = False):
         train_portion = 1 - test_portion
@@ -153,6 +166,8 @@ class Agent:
         self._train_ind = list(self._train_ind)
         self._num_train_samples = len(self._train_ind)
         self._num_test_samples = len(self._test_ind)
+
+
 
         
     #get a loss function, which is minus the reward function

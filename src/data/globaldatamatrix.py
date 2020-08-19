@@ -1,11 +1,12 @@
 import numpy as np
 import pandas as pd
+import xarray as xr
 
 import sqlite3
 from datetime import datetime
 import logging
 
-from src.tools.data import panel_fillna
+from src.tools.data import panel_fillna # NOTE: No longer a panel
 from src.config import *
 from src.constants import *
 
@@ -22,8 +23,8 @@ class HistoryManager:
         self._online = online
         if self._online:
             self._coin_list = CoinList(end, volume_average_days, volume_forward)
-        self.__volume_forward = volume_forward
-        self.__volume_average_days = volume_average_days
+        self.__volume_forward = volume_forward   # volume forward is selecting when to evalute volume for coins to avoid forward looking bias
+        self.__volume_average_days = volume_average_days  # Average days is the period length to evalute volume for
         self.__coins = None
 
     @property
@@ -69,7 +70,12 @@ class HistoryManager:
         self.__checkperiod(period)
 
         time_index = pd.to_datetime(list(range(start, end+1, period)),unit='s')
-        panel = pd.Panel(items=features, major_axis=coins, minor_axis=time_index, dtype=np.float32)
+        panel = xr.DataArray(
+            dims=['features', 'coins', 'time_index'],
+            coords={'features': features, 'coins': coins, 'time_index': time_index}
+        )
+        # panel = pd.Panel(items=features, major_axis=coins, minor_axis=time_index, dtype=np.float32)
+        # NOTE: Change this part to an xarray
 
         connection = sqlite3.connect(DATABASE_DIR)
         try:
@@ -175,12 +181,14 @@ class HistoryManager:
             if min_date==None or max_date==None:
                 self.__fill_data(start, end, coin, cursor)
             else:
-                if max_date+10*self.__storage_period<end:
+                if max_date+10*self.__storage_period<end: # If there is already data for coin
                     if not self._online:
                         raise Exception("Have to be online")
                     self.__fill_data(max_date + self.__storage_period, end, coin, cursor)
                 if min_date>start and self._online:
                     self.__fill_data(start, min_date - self.__storage_period-1, coin, cursor)
+
+            # NOTE: Check why we use storage_period here. What does Poloniex give
 
             # if there is no data
         finally:

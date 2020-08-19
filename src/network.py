@@ -1,8 +1,7 @@
 import tensorflow as tf
-from tensorflow import keras
 import numpy as np
 
-from config import config
+from src.config import config
 
 # Cols are time and rows are assets
 # input size is 11x50x3
@@ -24,13 +23,13 @@ class CNN(tf.keras.Model):
                             name = 'conv1'
                         )    
         
-        self.conv2 =  keras.layers.Conv2D(
+        self.conv2 =  tf.keras.layers.Conv2D(
                             filters = 20, 
                             kernel_size = (1, cols-2), 
                             activation="relu", 
                             name = 'conv2'
                         )
-        self.votes = keras.layers.Conv2D(1, (1,1), name = 'votes')
+        self.votes = tf.keras.layers.Conv2D(1, (1,1), name = 'votes')
         self.b = tf.Variable(tf.zeros((1, 1), dtype=tf.float32), trainable=True)
         self.softmax = tf.keras.layers.Activation('softmax')
 
@@ -38,7 +37,7 @@ class CNN(tf.keras.Model):
         x = self.conv1(inputs[0])
         x = self.conv2(x)
         x = tf.concat((x, inputs[1]), axis=3)
-        #x = keras.layers.Concatenate(axis=3)([x, inputs[1]])
+        #x = tf.keras.layers.Concatenate(axis=3)([x, inputs[1]])
         x = self.votes(x)
         x = tf.squeeze(x)
         cash_bias = tf.tile(self.b, [tf.shape(x)[0], 1])
@@ -57,5 +56,5 @@ if __name__=='__main__':
     print([var.name for var in tape.watched_variables()])
     grads = tape.gradient(y, model.trainable_variables)
     print(grads)
-    # keras.utils.plot_model(model, "CNN.png", show_shapes=True)
+    # tf.keras.utils.plot_model(model, "CNN.png", show_shapes=True)
 

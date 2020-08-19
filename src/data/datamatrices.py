@@ -128,55 +128,5 @@ class DataMatrices:
         appended_index = self._train_ind[-1]
         self.__replay_buffer.append_experience(appended_index)
 
-    def get_test_set(self):
-        return self.__pack_samples(self.test_indices)
 
-    def get_training_set(self):
-        return self.__pack_samples(self._train_ind[:-self._window_size])
 
-    def next_batch(self):
-        """
-        @:return: the next batch of training sample. The sample is a dictionary
-        with key "X"(input data); "y"(future relative price); "last_w" a numpy array
-        with shape [batch_size, assets]; "w" a list of numpy arrays list length is
-        batch_size
-        """
-        batch = self.__pack_samples([exp.state_index for exp in self.__replay_buffer.next_experience_batch()])
-        return batch
-
-    def __pack_samples(self, indexs):
-        indexs = np.array(indexs)
-        last_w = self.__PVM.values[indexs-1, :]
-
-        def setw(w):
-            self.__PVM.iloc[indexs, :] = w
-        M = [self.get_submatrix(index) for index in indexs]
-        M = np.array(M)
-        X = M[:, :, :, :-1]
-        y = M[:, :, :, -1] / M[:, 0, None, :, -2]
-        return {"X": X, "y": y, "last_w": last_w, "setw": setw}
-
-    # volume in y is the volume in next access period
-    def get_submatrix(self, ind):
-        return self.__global_data.values[:, :, ind:ind+self._window_size+1]
-
-    def __divide_data(self, test_portion, portion_reversed):
-        train_portion = 1 - test_portion
-        s = float(train_portion + test_portion)
-        if portion_reversed:
-            portions = np.array([test_portion]) / s
-            portion_split = (portions * self._num_periods).astype(int)
-            indices = np.arange(self._num_periods)
-            self._test_ind, self._train_ind = np.split(indices, portion_split)
-        else:
-            portions = np.array([train_portion]) / s
-            portion_split = (portions * self._num_periods).astype(int)
-            indices = np.arange(self._num_periods)
-            self._train_ind, self._test_ind = np.split(indices, portion_split)
-
-        self._train_ind = self._train_ind[:-(self._window_size + 1)]
-        # NOTE(zhengyao): change the logic here in order to fit both
-        # reversed and normal version
-        self._train_ind = list(self._train_ind)
-        self._num_train_samples = len(self._train_ind)
-        self._num_test_samples = len(self.test_indices)
