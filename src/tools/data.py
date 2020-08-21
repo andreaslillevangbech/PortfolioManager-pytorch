@@ -126,3 +126,12 @@ def panel_fillna(panel, type="bfill"):
             frames[item] = panel.loc[item].fillna(axis=1, method=type)
     return pd.Panel(frames)
 
+
+def xarray_fillna(panel, type="bfill"):
+    if type=="both":
+        panel = panel.bfill(dim = 'time_index').ffill(dim = 'time_index')
+    elif type=="bfill":
+        panel = panel.bfill(dim = 'time_index')
+    else:
+        panel = panel.ffill(dim = 'time_index')
+    return panel

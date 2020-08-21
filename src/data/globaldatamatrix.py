@@ -121,7 +121,7 @@ class HistoryManager:
                                                     parse_dates=["date_norm"],
                                                     index_col="date_norm")
                     panel.loc[feature, coin, serial_data.index] = serial_data.squeeze()
-                    panel = panel_fillna(panel, "both")
+                    panel = xarray_fillna(panel, "both")
         finally:
             connection.commit()
             connection.close()
@@ -206,6 +206,7 @@ class HistoryManager:
 
     def __fill_part_data(self, start, end, coin, cursor):
         chart = self._coin_list.get_chart_until_success(
+            polo = self._coin_list._polo
             pair=self._coin_list.allActiveCoins.at[coin, 'pair'],
             start=start,
             end=end,
