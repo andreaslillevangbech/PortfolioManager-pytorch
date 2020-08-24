@@ -69,7 +69,7 @@ class HistoryManager:
         logging.info("feature type list is %s" % str(features))
         self.__checkperiod(period)
 
-        time_index = pd.to_datetime(list(range(start, end+1, period)),unit='s')
+        time_index = pd.to_datetime(list(range(start, end+1, period)), unit='s')
         panel = xr.DataArray(
             dims=['features', 'coins', 'time_index'],
             coords={'features': features, 'coins': coins, 'time_index': time_index}

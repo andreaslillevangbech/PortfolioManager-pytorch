@@ -11,5 +11,5 @@ setup(
     author="",
     author_email="",
     packages=find_packages(exclude=("tests", "docs"),
-                           include=("matplotlib", "tensorflow",
+                           include=("matplotlib", "tensorflow", "xarray",
                                     "pandas", "scipy")))

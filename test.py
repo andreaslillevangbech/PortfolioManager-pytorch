@@ -5,9 +5,6 @@ import pandas as pd
 from src.constants import *
 from src.data.poloniex import Poloniex
 
-minute = 60
-five_minutes = 5*minute
-
 polo = Poloniex()
 
 start = datetime(2020, 1, 20, 3, 9)
@@ -17,7 +14,7 @@ end= datetime(2020, 1, 20, 3, 20)
 end= int(time.mktime(end.timetuple()))
 
 
-chart = polo.marketChart(period=five_minutes, start=start, end=end, pair = 'USDC_BTC')
+chart = polo.marketChart(period=FIVE_MINUTES, start=start, end=end, pair = 'USDC_BTC')
 for i in chart:
     print(i)
 
