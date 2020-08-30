@@ -6,7 +6,7 @@ import sqlite3
 from datetime import datetime
 import logging
 
-from src.tools.data import panel_fillna # NOTE: No longer a panel
+from src.tools.data import panel_fillna, xarray_fillna # Now using xarray_fillna as pd.Panel is deprecated
 from src.config import *
 from src.constants import *
 
@@ -47,7 +47,7 @@ class HistoryManager:
         """
         return self.get_global_panel(start, end, period, features).values
 
-    def get_global_panel(self, start, end, period=300, features=('close',)):
+    def get_global_panel(self, start, end, period=300, features=['close']):
         """
         :param start/end: linux timestamp in seconds
         :param period: time interval of each data access point
@@ -83,9 +83,9 @@ class HistoryManager:
                 for feature in features:
                     # NOTE: transform the start date to end date
                     if feature == "close":
-                        sql = ("SELECT date+300 AS date_norm, close FROM History WHERE"
+                        sql = ("SELECT date AS date_norm, close FROM History WHERE"
                                " date_norm>={start} and date_norm<={end}" 
-                               " and date_norm%{period}=0 and coin=\"{coin}\"".format(
+                               " and date_norm%{period}=0 and coin=\"{coin}\"".format(   # Should always give date_norm%period=0 as we subtract the residual from the input dates
                                start=start, end=end, period=period, coin=coin))
                     elif feature == "open":
                         sql = ("SELECT date+{period} AS date_norm, open FROM History WHERE"
@@ -206,7 +206,7 @@ class HistoryManager:
 
     def __fill_part_data(self, start, end, coin, cursor):
         chart = self._coin_list.get_chart_until_success(
-            polo = self._coin_list._polo
+            polo = self._coin_list._polo,
             pair=self._coin_list.allActiveCoins.at[coin, 'pair'],
             start=start,
             end=end,

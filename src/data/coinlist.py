@@ -69,7 +69,6 @@ class CoinList(object):
         if minVolume == 0:
             r = self._df.loc[self._df['price'] > 2e-6]
             r = r.sort_values(by='volume', ascending=False)[:n]
-            print(r)
             if order:
                 return r
             else:

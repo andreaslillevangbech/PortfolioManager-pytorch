@@ -1,29 +1,16 @@
 from datetime import datetime
-import time
+import time, calendar
 import pandas as pd
 
 from src.constants import *
 from src.data.poloniex import Poloniex
 
-polo = Poloniex()
+start = int(time.mktime(start.timetuple()) - time.timezone)
+end= int(calendar.timegm(end.timetuple()))
 
-start = datetime(2020, 1, 20, 3, 9)
-start = int(time.mktime(start.timetuple()))
+tick = polo.marketTicker()
+tick['USDC_BTC']
 
-end= datetime(2020, 1, 20, 3, 20)
-end= int(time.mktime(end.timetuple()))
-
-
-chart = polo.marketChart(period=FIVE_MINUTES, start=start, end=end, pair = 'USDC_BTC')
-for i in chart:
-    print(i)
-
-print(len(chart))
-
-first = chart[0]['date']
-print(pd.to_datetime(start))
-print(pd.to_datetime(first))
-
-last = chart[-1]['date']
-print(pd.to_datetime(end))
-print(pd.to_datetime(last))
+time_index = pd.to_datetime(list(range(start, end+1, FIFTEEN_MINUTES)),unit='s')
+print(time_index)
+print(len(time_index))

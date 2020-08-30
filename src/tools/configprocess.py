@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function
 import sys
 import time
 from datetime import datetime
@@ -91,7 +90,7 @@ def byteify(input):
 
 
 def parse_time(time_string):
-    return time.mktime(datetime.strptime(time_string, "%Y/%m/%d").timetuple())
+    return time.mktime(datetime.strptime(time_string, "%Y/%m/%d").timetuple()) - time.timezone
 
 
 def load_config(index=None):
