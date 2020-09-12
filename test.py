@@ -4,13 +4,18 @@ import pandas as pd
 
 from src.constants import *
 from src.data.poloniex import Poloniex
+from src.data.coinlist import CoinList
+
+polo = Poloniex()
+
+
+start = datetime(2020, 1, 20, 3, 0)
+end= datetime(2020, 1, 20, 4, 20)
 
 start = int(time.mktime(start.timetuple()) - time.timezone)
 end= int(calendar.timegm(end.timetuple()))
+period = FIFTEEN_MINUTES
 
-tick = polo.marketTicker()
-tick['USDC_BTC']
+coin = CoinList(end = end)
+print(coin.topNVolume(n=10))
 
-time_index = pd.to_datetime(list(range(start, end+1, FIFTEEN_MINUTES)),unit='s')
-print(time_index)
-print(len(time_index))
