@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from src.network import CNN
 import numpy as np
 import tensorflow as tf

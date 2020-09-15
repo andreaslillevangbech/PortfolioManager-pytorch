@@ -15,6 +15,7 @@ class CoinList(object):
         volumes = []
         prices = []
 
+        # NOTE: rewrite this such that it only includes one stablecoin
         logging.info("select coin online from %s to %s" % (datetime.fromtimestamp(end-(DAY*volume_average_days)-
                                                                                   volume_forward).
                                                            strftime('%Y-%m-%d %H:%M'),
@@ -38,6 +39,12 @@ class CoinList(object):
                                                                forward=volume_forward))
         self._df = pd.DataFrame({'coin': coins, 'pair': pairs, 'volume': volumes, 'price':prices})
         self._df = self._df.set_index('coin')
+
+        # remove all but one stablecoin
+        self._stables = self._df[self._df.pair.str.endswith("_BTC")]
+        discard = [i for i in list(self._stables.index) if (self._stables.loc[i].volume < self._stables.volume.max())]
+        self._df = self._df.drop(discard)
+
 
     @property
     def allActiveCoins(self):
