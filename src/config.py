@@ -1,6 +1,6 @@
 config = {
     'training':{
-        'steps': 2000,
+        'steps':100,
         'batch_size': 16,
         'buffer_bias': 5e-5
     },
@@ -9,10 +9,12 @@ config = {
         'coin_no': 11,
         'window_size': 50,
         'feature_no': 3,
-        'start_date': "2019/07/01",
-        'end_date': "2020/07/01",
+        'start_date': "2020/06/01",
+        'end_date': "2020/07/09",
         "test_portion": 0.08,
-        "volume_average_days": 30
+        "volume_average_days": 30,
+        "market": "poloniex",
+        "online": 1
     },
     'trading':{
     "trading_consumption": 0.0025

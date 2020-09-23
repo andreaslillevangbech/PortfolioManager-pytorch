@@ -1,5 +1,6 @@
 import sys
 import time
+import calendar
 from datetime import datetime
 import json
 import os
@@ -90,7 +91,7 @@ def byteify(input):
 
 
 def parse_time(time_string):
-    return time.mktime(datetime.strptime(time_string, "%Y/%m/%d").timetuple()) - time.timezone
+    return calendar.timegm(datetime.strptime(time_string, "%Y/%m/%d").timetuple())
 
 
 def load_config(index=None):

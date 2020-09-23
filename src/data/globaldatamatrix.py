@@ -83,7 +83,7 @@ class HistoryManager:
                 for feature in features:
                     # NOTE: transform the start date to end date
                     if feature == "close":
-                        sql = ("SELECT date AS date_norm, close FROM History WHERE"
+                        sql = ("SELECT date + 300 AS date_norm, close FROM History WHERE"
                                " date_norm>={start} and date_norm<={end}" 
                                " and date_norm%{period}=0 and coin=\"{coin}\"".format(   # Should always give date_norm%period=0 as we subtract the residual from the input dates
                                start=start, end=end, period=period, coin=coin))

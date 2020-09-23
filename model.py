@@ -12,5 +12,6 @@ with tf.GradientTape() as tape:
 
 print([var.name for var in tape.watched_variables()])
 grads = tape.gradient(y, model.trainable_variables)
-print(grads)
+print('grades: ', grads)
+print('output: ', y)
 # tf.keras.utils.plot_model(model, "CNN.png", show_shapes=True)
