@@ -7,7 +7,7 @@ from datetime import datetime
 import logging
 
 from src.tools.data import panel_fillna, xarray_fillna # Now using xarray_fillna as pd.Panel is deprecated
-from src.config import *
+from config import *
 from src.constants import *
 
 from src.data.coinlist import CoinList

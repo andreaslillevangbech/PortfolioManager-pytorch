@@ -44,6 +44,7 @@ class CoinList(object):
         self._stables = self._df[self._df.pair.str.endswith("_BTC")]
         discard = [i for i in list(self._stables.index) if (self._stables.loc[i].volume < self._stables.volume.max())]
         self._df = self._df.drop(discard)
+        logging.info("Successfully got coinlist")
 
 
     @property

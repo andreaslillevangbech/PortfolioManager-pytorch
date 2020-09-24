@@ -10,6 +10,7 @@ class Agent:
         
         self.train_config = config['training']        
         self.batch_size = self.train_config['batch_size']
+        self.input_no = self.batch_size
         
         self.input_config = config['input']
         self.coin_no =self.input_config['coin_no']
@@ -42,6 +43,7 @@ class Agent:
         w = tf.reshape(w, [w.shape[0], w.shape[1], 1, 1] )
         X = tf.transpose(batch['X'], [0, 2, 3, 1])   # (coins, time, features) that is, channels last. How tf likes it
         y = batch['y']
+        self.input_no = y.shape[0]
                 
         with tf.GradientTape() as tape:
                 output = self.model([X, w])
@@ -54,15 +56,11 @@ class Agent:
 
         # Save the model output in PVM
         batch['setw'](output[:, 1:].numpy())
-        
-        return loss
 
 
-    #get a loss function, which is minus the reward function
     def loss(self, y, output):
         #r_t = log(mu_t * y_t dot w_{t-1})
-        
-        self.future_price = tf.concat([tf.ones([y.shape[0], 1]), y[:, 0, :]], 1)
+        self.future_price = tf.concat([tf.ones([self.input_no, 1]), y[:, 0, :]], 1) # Add cash price (always 1)
         self.future_w = (self.future_price * output) / tf.reduce_sum(self.future_price * output, axis=1)[:, None]
         self.pv_vector = tf.reduce_sum(output * self.future_price, axis=1) *\
                            (tf.concat([tf.ones(1), self.pure_pc(output)], 0))
@@ -74,8 +72,8 @@ class Agent:
     # consumption vector (on each periods)
     def pure_pc(self, output):
         c = self.commission_ratio
-        w_t = self.future_w[:self.batch_size-1]  # rebalanced
-        w_t1 = output[1:self.batch_size]
+        w_t = self.future_w[:self.input_no-1]  # rebalanced
+        w_t1 = output[1:self.input_no]
         mu = 1 - tf.reduce_sum(tf.math.abs(w_t1[:, 1:]-w_t[:, 1:]), axis=1)*c
         """
         mu = 1-3*c+c**2
@@ -101,6 +99,7 @@ class Agent:
         w = tf.reshape(w, [w.shape[0], w.shape[1], 1, 1] )
         X = tf.transpose(batch['X'], [0, 2, 3, 1])   # (coins, time, features) that is, channels last. How tf likes it
         y = batch['y'] 
+        self.input_no = y.shape[0]
 
         output = self.model([X, w])
         loss = self.loss(y, output)
@@ -117,7 +116,6 @@ class Agent:
         return self.pv_vector, loss, output
 
 
-
     def call_model(self, history, prev_w):
         assert isinstance(history, np.ndarray),\
             "the history should be a numpy array, not %s" % type(history)
@@ -131,5 +129,5 @@ class Agent:
             self.coin_no, 
             self.window_size,
             self.feature_no,
-            config['training']['batch_size']
+            self.train_config['batch_size']
         )

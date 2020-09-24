@@ -11,6 +11,7 @@ with tf.GradientTape() as tape:
     y = model([X,w])
 
 print([var.name for var in tape.watched_variables()])
+print("Variables: ", [var for var in tape.watched_variables()])
 grads = tape.gradient(y, model.trainable_variables)
 print('grades: ', grads)
 print('output: ', y)

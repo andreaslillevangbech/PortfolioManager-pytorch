@@ -1,6 +1,3 @@
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
 import src.data.globaldatamatrix as gdm
 from src.data.replayBuffer import ReplayBuffer
 import numpy as np
@@ -156,9 +153,10 @@ class DataMatrices:
 
         def setw(w):                      # Notice that this function is defined in terms of the specifik indexs
             self.__PVM.iloc[indexs, :] = w    
-        M = [self.get_submatrix(index) for index in indexs]   # For each state_index in the batch, get a input tensor
+        M = [self.get_submatrix(index) for index in indexs]
         M = np.array(M, dtype='float32')
-        X = M[:, :, :, :-1]    # X_t tensor
+        #NOTE: this is so messed up
+        X = M[:, :, :, :-1] / M[:,0, None, :, -2, None]    # X_t tensor normalized by closing price
         y = M[:, :, :, -1] / M[:, 0, None, :, -2]     # y_{t+1} obtained by dividing all features by prev close price
         return {"X": X, "y": y, "last_w": last_w, "setw": setw}
 

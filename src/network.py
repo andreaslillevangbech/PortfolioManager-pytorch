@@ -1,8 +1,6 @@
 import tensorflow as tf
 import numpy as np
 
-from src.config import config
-
 # Cols are time and rows are assets
 # input size is 11x50x3
 # Remember: Channels last
