@@ -1,327 +1,327 @@
-INFO:root:select coin online from 2020-05-31 18:55 to 2020-06-30 18:55
-DEBUG:root:Selected coins are: ['reversed_USDT', 'ETH', 'XRP', 'XMR', 'LTC', 'BCHABC', 'BCHSV', 'SNX', 'TRX', 'STR', 'ATOM']
-INFO:root:fill XMR data from 2020-03-31 17:00 to 2020-05-31 16:54
-INFO:root:fill LTC data from 2020-03-31 17:00 to 2020-05-31 16:54
-INFO:root:fill BCHABC data from 2020-03-31 17:00 to 2020-05-31 16:54
-INFO:root:fill SNX data from 2020-03-31 17:00 to 2020-05-31 16:54
-INFO:root:fill TRX data from 2020-03-31 17:00 to 2020-05-31 16:54
-INFO:root:fill STR data from 2020-03-31 17:00 to 2020-05-31 16:54
-INFO:root:fill ATOM data from 2020-03-31 17:00 to 2020-05-31 16:54
-INFO:root:feature type list is ['close', 'high', 'low']
-DEBUG:root:buffer_bias is 0.000050
-INFO:root:the number of training examples is 4322, of test examples is 381
-DEBUG:root:the training set is from 50 to 4371
-DEBUG:root:the test set is from 4372 to 4752
-INFO:root:select coin online from 2020-05-31 18:55 to 2020-06-30 18:55
-DEBUG:root:Selected coins are: ['reversed_USDT', 'ETH', 'XRP', 'XMR', 'LTC', 'BCHABC', 'BCHSV', 'SNX', 'TRX', 'STR', 'ATOM']
-INFO:root:fill SNX data from 2020-03-31 17:00 to 2020-04-02 13:49
-INFO:root:feature type list is ['close', 'high', 'low']
-DEBUG:root:buffer_bias is 0.000050
-INFO:root:the number of training examples is 4322, of test examples is 381
-DEBUG:root:the training set is from 50 to 4371
-DEBUG:root:the test set is from 4372 to 4752
-INFO:root:upper bound in test is 17.98393139483815
-WARNING:tensorflow:Layer cnn is casting an input tensor from dtype float64 to the layer's dtype of float32, which is new behavior in TensorFlow 2.  The layer has dtype float32 because its dtype defaults to floatx.
-
-If you intended to run this layer in float32, you can safely ignore this warning. If in doubt, this warning is likely only an issue if you are porting a TensorFlow 1.X model to TensorFlow 2.
-
-To change all layers to have dtype float64 by default, call `tf.keras.backend.set_floatx('float64')`. To change just this layer, pass dtype='float64' to the layer constructor. If you are the author of this layer, you can disable autocasting by passing autocast=False to the base Layer constructor.
-
-INFO:root:average time for data accessing is 2.7993917465209962e-05
-INFO:root:average time for training is 0.0001702251434326172
-INFO:root:select coin online from 2020-05-31 18:55 to 2020-06-30 18:55
-DEBUG:root:Selected coins are: ['reversed_USDT', 'ETH', 'XRP', 'XMR', 'LTC', 'BCHABC', 'BCHSV', 'SNX', 'TRX', 'STR', 'ATOM']
-INFO:root:fill SNX data from 2020-03-31 17:00 to 2020-04-02 13:49
-INFO:root:feature type list is ['close', 'high', 'low']
-DEBUG:root:buffer_bias is 0.000050
-INFO:root:the number of training examples is 4322, of test examples is 381
-DEBUG:root:the training set is from 50 to 4371
-DEBUG:root:the test set is from 4372 to 4752
-INFO:root:upper bound in test is 17.98393139483815
-WARNING:tensorflow:Layer cnn is casting an input tensor from dtype float64 to the layer's dtype of float32, which is new behavior in TensorFlow 2.  The layer has dtype float32 because its dtype defaults to floatx.
-
-If you intended to run this layer in float32, you can safely ignore this warning. If in doubt, this warning is likely only an issue if you are porting a TensorFlow 1.X model to TensorFlow 2.
-
-To change all layers to have dtype float64 by default, call `tf.keras.backend.set_floatx('float64')`. To change just this layer, pass dtype='float64' to the layer constructor. If you are the author of this layer, you can disable autocasting by passing autocast=False to the base Layer constructor.
-
-INFO:root:average time for data accessing is 3.086709976196289e-05
-INFO:root:average time for training is 0.00015820002555847168
-INFO:root:select coin online from 2020-05-31 18:55 to 2020-06-30 18:55
-DEBUG:root:Selected coins are: ['reversed_USDT', 'ETH', 'XRP', 'XMR', 'LTC', 'BCHABC', 'BCHSV', 'SNX', 'TRX', 'STR', 'ATOM']
-INFO:root:fill SNX data from 2020-03-31 17:00 to 2020-04-02 13:49
-INFO:root:feature type list is ['close', 'high', 'low']
-DEBUG:root:buffer_bias is 0.000050
-INFO:root:the number of training examples is 4322, of test examples is 381
-DEBUG:root:the training set is from 50 to 4371
-DEBUG:root:the test set is from 4372 to 4752
-INFO:root:upper bound in test is 17.98393139483815
-WARNING:tensorflow:Layer cnn is casting an input tensor from dtype float64 to the layer's dtype of float32, which is new behavior in TensorFlow 2.  The layer has dtype float32 because its dtype defaults to floatx.
-
-If you intended to run this layer in float32, you can safely ignore this warning. If in doubt, this warning is likely only an issue if you are porting a TensorFlow 1.X model to TensorFlow 2.
-
-To change all layers to have dtype float64 by default, call `tf.keras.backend.set_floatx('float64')`. To change just this layer, pass dtype='float64' to the layer constructor. If you are the author of this layer, you can disable autocasting by passing autocast=False to the base Layer constructor.
-
-INFO:root:average time for data accessing is 2.223682403564453e-05
-INFO:root:average time for training is 0.00018490910530090333
-INFO:root:select coin online from 2020-05-31 18:55 to 2020-06-30 18:55
-DEBUG:root:Selected coins are: ['reversed_USDT', 'ETH', 'XRP', 'XMR', 'LTC', 'BCHABC', 'BCHSV', 'SNX', 'TRX', 'STR', 'ATOM']
-INFO:root:fill SNX data from 2020-03-31 17:00 to 2020-04-02 13:49
-INFO:root:feature type list is ['close', 'high', 'low']
-DEBUG:root:buffer_bias is 0.000050
-INFO:root:the number of training examples is 4322, of test examples is 381
-DEBUG:root:the training set is from 50 to 4371
-DEBUG:root:the test set is from 4372 to 4752
-INFO:root:upper bound in test is 17.98393139483815
-WARNING:tensorflow:Layer cnn is casting an input tensor from dtype float64 to the layer's dtype of float32, which is new behavior in TensorFlow 2.  The layer has dtype float32 because its dtype defaults to floatx.
-
-If you intended to run this layer in float32, you can safely ignore this warning. If in doubt, this warning is likely only an issue if you are porting a TensorFlow 1.X model to TensorFlow 2.
-
-To change all layers to have dtype float64 by default, call `tf.keras.backend.set_floatx('float64')`. To change just this layer, pass dtype='float64' to the layer constructor. If you are the author of this layer, you can disable autocasting by passing autocast=False to the base Layer constructor.
-
-INFO:root:average time for data accessing is 2.2673845291137695e-05
-INFO:root:average time for training is 0.00018407511711120606
-INFO:root:select coin online from 2020-05-31 18:55 to 2020-06-30 18:55
-INFO:root:select coin online from 2020-05-31 18:55 to 2020-06-30 18:55
-DEBUG:root:Selected coins are: ['reversed_USDT', 'ETH', 'XRP', 'XMR', 'LTC', 'BCHABC', 'BCHSV', 'SNX', 'TRX', 'STR', 'ATOM']
-INFO:root:fill SNX data from 2020-03-31 17:00 to 2020-04-02 13:49
-INFO:root:feature type list is ['close', 'high', 'low']
-DEBUG:root:buffer_bias is 0.000050
-INFO:root:the number of training examples is 4322, of test examples is 381
-DEBUG:root:the training set is from 50 to 4371
-DEBUG:root:the test set is from 4372 to 4752
-INFO:root:upper bound in test is 17.98393139483815
-WARNING:tensorflow:Layer cnn is casting an input tensor from dtype float64 to the layer's dtype of float32, which is new behavior in TensorFlow 2.  The layer has dtype float32 because its dtype defaults to floatx.
-
-If you intended to run this layer in float32, you can safely ignore this warning. If in doubt, this warning is likely only an issue if you are porting a TensorFlow 1.X model to TensorFlow 2.
-
-To change all layers to have dtype float64 by default, call `tf.keras.backend.set_floatx('float64')`. To change just this layer, pass dtype='float64' to the layer constructor. If you are the author of this layer, you can disable autocasting by passing autocast=False to the base Layer constructor.
-
-INFO:root:average time for data accessing is 2.2347927093505858e-05
-INFO:root:average time for training is 0.00018228697776794434
-INFO:root:get better model at 0 steps, whose test portfolio value is tf.Tensor(1.0926396, shape=(), dtype=float32)
-INFO:root:average time for data accessing is 0.021627750158309936
-INFO:root:average time for training is 0.013535302877426148
-INFO:root:average time for data accessing is 0.021327171802520754
-INFO:root:average time for training is 0.013319060802459717
-INFO:root:average time for data accessing is 0.02250044584274292
-INFO:root:average time for training is 0.014217237710952759
-INFO:root:average time for data accessing is 0.023025681257247924
-INFO:root:average time for training is 0.014590938329696655
-WARNING:tensorflow:Layer cnn_1 is casting an input tensor from dtype float64 to the layer's dtype of float32, which is new behavior in TensorFlow 2.  The layer has dtype float32 because its dtype defaults to floatx.
-
-If you intended to run this layer in float32, you can safely ignore this warning. If in doubt, this warning is likely only an issue if you are porting a TensorFlow 1.X model to TensorFlow 2.
-
-To change all layers to have dtype float64 by default, call `tf.keras.backend.set_floatx('float64')`. To change just this layer, pass dtype='float64' to the layer constructor. If you are the author of this layer, you can disable autocasting by passing autocast=False to the base Layer constructor.
-
-WARNING:root:the portfolio value train No.0 is tf.Tensor(1.0926396, shape=(), dtype=float32) log_mean is tf.Tensor(0.00026766246, shape=(), dtype=float32), the training time is 194 seconds
-INFO:root:select coin online from 2020-05-24 12:12 to 2020-06-23 12:12
+INFO:root:select coin online from 2020-05-22 00:40 to 2020-06-21 00:40
 INFO:root:Successfully got coinlist
 DEBUG:root:Selected coins are: ['reversed_USDT', 'ETH', 'XRP', 'XMR', 'LTC', 'BCHABC', 'BCHSV', 'TRX', 'STR', 'ETC', 'DASH']
 INFO:root:feature type list is ['close', 'high', 'low']
 DEBUG:root:buffer_bias is 0.000050
-INFO:root:the number of training examples is 8341, of test examples is 730
-DEBUG:root:the training set is from 50 to 8390
-DEBUG:root:the test set is from 8391 to 9120
-INFO:root:upper bound in test is 28.483139095111696
+INFO:root:the number of training examples is 9729, of test examples is 849
+DEBUG:root:the training set is from 31 to 9759
+DEBUG:root:the test set is from 9760 to 10608
+INFO:root:upper bound in test is 52.58017561595104
 WARNING:tensorflow:Layer cnn is casting an input tensor from dtype float64 to the layer's dtype of float32, which is new behavior in TensorFlow 2.  The layer has dtype float32 because its dtype defaults to floatx.
 
 If you intended to run this layer in float32, you can safely ignore this warning. If in doubt, this warning is likely only an issue if you are porting a TensorFlow 1.X model to TensorFlow 2.
 
 To change all layers to have dtype float64 by default, call `tf.keras.backend.set_floatx('float64')`. To change just this layer, pass dtype='float64' to the layer constructor. If you are the author of this layer, you can disable autocasting by passing autocast=False to the base Layer constructor.
 
-INFO:root:average time for data accessing is 4.9487829208374025e-05
-INFO:root:average time for training is 0.0001682448387145996
+INFO:root:average time for data accessing is 4.547786712646484e-05
+INFO:root:average time for training is 0.00108994722366333
 INFO:root:==============================
 INFO:root:step 0
 INFO:root:------------------------------
-INFO:root:training loss is tf.Tensor(-8.107234e-06, shape=(), dtype=float32)
+INFO:root:training loss is tf.Tensor(2.1478172e-06, shape=(), dtype=float32)
 
-INFO:root:the portfolio value on test set is tf.Tensor(1.0535557, shape=(), dtype=float32)
-log_mean is tf.Tensor(7.6722565e-05, shape=(), dtype=float32)
-loss_value is -0.000077
-log mean without commission fee is 0.000081
-
-INFO:root:==============================
-
-INFO:root:get better model at 0 steps, whose test portfolio value is tf.Tensor(1.0699619, shape=(), dtype=float32)
-INFO:root:average time for data accessing is 0.04594960618019104
-INFO:root:average time for training is 0.022286397218704224
-INFO:root:==============================
-INFO:root:step 1000
-INFO:root:------------------------------
-INFO:root:training loss is tf.Tensor(-1.1954919e-05, shape=(), dtype=float32)
-
-INFO:root:the portfolio value on test set is tf.Tensor(1.0507375, shape=(), dtype=float32)
-log_mean is tf.Tensor(7.2781884e-05, shape=(), dtype=float32)
+INFO:root:the portfolio value on test set is tf.Tensor(1.0611955, shape=(), dtype=float32)
+log_mean is tf.Tensor(7.261199e-05, shape=(), dtype=float32)
 loss_value is -0.000073
-log mean without commission fee is 0.000074
+log mean without commission fee is 0.000078
 
 INFO:root:==============================
 
-INFO:root:get better model at 1000 steps, whose test portfolio value is tf.Tensor(1.1048565, shape=(), dtype=float32)
-INFO:root:select coin online from 2020-05-24 12:12 to 2020-06-23 12:12
-INFO:root:Successfully got coinlist
-DEBUG:root:Selected coins are: ['reversed_USDT', 'ETH', 'XRP', 'XMR', 'LTC', 'BCHABC', 'BCHSV', 'TRX', 'STR', 'ETC', 'DASH']
-INFO:root:feature type list is ['close', 'high', 'low']
-DEBUG:root:buffer_bias is 0.000050
-INFO:root:the number of training examples is 8341, of test examples is 730
-DEBUG:root:the training set is from 50 to 8390
-DEBUG:root:the test set is from 8391 to 9120
-INFO:root:upper bound in test is 28.483139095111696
-WARNING:tensorflow:Layer cnn is casting an input tensor from dtype float64 to the layer's dtype of float32, which is new behavior in TensorFlow 2.  The layer has dtype float32 because its dtype defaults to floatx.
-
-If you intended to run this layer in float32, you can safely ignore this warning. If in doubt, this warning is likely only an issue if you are porting a TensorFlow 1.X model to TensorFlow 2.
-
-To change all layers to have dtype float64 by default, call `tf.keras.backend.set_floatx('float64')`. To change just this layer, pass dtype='float64' to the layer constructor. If you are the author of this layer, you can disable autocasting by passing autocast=False to the base Layer constructor.
-
-INFO:root:average time for data accessing is 0.00014874982833862306
-INFO:root:average time for training is 0.00017394495010375976
-INFO:root:==============================
-INFO:root:step 0
-INFO:root:------------------------------
-INFO:root:training loss is tf.Tensor(-9.260424e-06, shape=(), dtype=float32)
-
-INFO:root:the portfolio value on test set is tf.Tensor(1.0553373, shape=(), dtype=float32)
-log_mean is tf.Tensor(7.9207995e-05, shape=(), dtype=float32)
-loss_value is -0.000079
-log mean without commission fee is 0.000084
-
-INFO:root:==============================
-
-INFO:root:get better model at 0 steps, whose test portfolio value is tf.Tensor(1.0802996, shape=(), dtype=float32)
-INFO:root:average time for data accessing is 0.05114977264404297
-INFO:root:average time for training is 0.02409876275062561
+INFO:root:get better model at 0 steps, whose test portfolio value is tf.Tensor(0.9793217, shape=(), dtype=float32)
+INFO:root:average time for data accessing is 0.04945740342140198
+INFO:root:average time for training is 0.006135898590087891
 INFO:root:==============================
 INFO:root:step 1000
 INFO:root:------------------------------
-INFO:root:training loss is tf.Tensor(-1.1559058e-05, shape=(), dtype=float32)
+INFO:root:training loss is tf.Tensor(1.5813457e-06, shape=(), dtype=float32)
 
-INFO:root:the portfolio value on test set is tf.Tensor(1.0524062, shape=(), dtype=float32)
-log_mean is tf.Tensor(7.5117874e-05, shape=(), dtype=float32)
-loss_value is -0.000075
-log mean without commission fee is 0.000076
+INFO:root:the portfolio value on test set is tf.Tensor(1.0443645, shape=(), dtype=float32)
+log_mean is tf.Tensor(5.3068943e-05, shape=(), dtype=float32)
+loss_value is -0.000053
+log mean without commission fee is 0.000055
 
 INFO:root:==============================
 
-INFO:root:average time for data accessing is 0.045915969133377074
-INFO:root:average time for training is 0.02192071270942688
+INFO:root:average time for data accessing is 0.04980264949798584
+INFO:root:average time for training is 0.006528699159622192
 INFO:root:==============================
 INFO:root:step 2000
 INFO:root:------------------------------
-INFO:root:training loss is tf.Tensor(-1.050151e-05, shape=(), dtype=float32)
+INFO:root:training loss is tf.Tensor(7.2917226e-07, shape=(), dtype=float32)
 
-INFO:root:the portfolio value on test set is tf.Tensor(1.0549799, shape=(), dtype=float32)
-log_mean is tf.Tensor(7.870857e-05, shape=(), dtype=float32)
-loss_value is -0.000079
-log mean without commission fee is 0.000082
+INFO:root:the portfolio value on test set is tf.Tensor(1.0003233, shape=(), dtype=float32)
+log_mean is tf.Tensor(4.032158e-07, shape=(), dtype=float32)
+loss_value is -0.000000
+log mean without commission fee is 0.000001
 
 INFO:root:==============================
 
-INFO:root:average time for data accessing is 0.04516749024391174
-INFO:root:average time for training is 0.021491680383682252
+INFO:root:average time for data accessing is 0.05190463042259216
+INFO:root:average time for training is 0.006362360954284668
 INFO:root:==============================
 INFO:root:step 3000
 INFO:root:------------------------------
-INFO:root:training loss is tf.Tensor(-1.0397643e-05, shape=(), dtype=float32)
+INFO:root:training loss is tf.Tensor(2.4711747e-07, shape=(), dtype=float32)
 
-INFO:root:the portfolio value on test set is tf.Tensor(1.0557489, shape=(), dtype=float32)
-log_mean is tf.Tensor(7.977992e-05, shape=(), dtype=float32)
-loss_value is -0.000080
-log mean without commission fee is 0.000083
+INFO:root:the portfolio value on test set is tf.Tensor(1.0000309, shape=(), dtype=float32)
+log_mean is tf.Tensor(4.371205e-08, shape=(), dtype=float32)
+loss_value is -0.000000
+log mean without commission fee is 0.000000
 
 INFO:root:==============================
 
-INFO:root:get better model at 3000 steps, whose test portfolio value is tf.Tensor(1.0905993, shape=(), dtype=float32)
-INFO:root:average time for data accessing is 0.047089685678482054
-INFO:root:average time for training is 0.023031322956085204
+INFO:root:average time for data accessing is 0.055218729734420775
+INFO:root:average time for training is 0.006354938745498657
 INFO:root:==============================
 INFO:root:step 4000
 INFO:root:------------------------------
-INFO:root:training loss is tf.Tensor(-1.2079711e-05, shape=(), dtype=float32)
+INFO:root:training loss is tf.Tensor(5.0575224e-08, shape=(), dtype=float32)
 
-INFO:root:the portfolio value on test set is tf.Tensor(1.0516596, shape=(), dtype=float32)
-log_mean is tf.Tensor(7.4071875e-05, shape=(), dtype=float32)
-loss_value is -0.000074
-log mean without commission fee is 0.000075
+INFO:root:the portfolio value on test set is tf.Tensor(1.0000174, shape=(), dtype=float32)
+log_mean is tf.Tensor(3.045788e-08, shape=(), dtype=float32)
+loss_value is -0.000000
+log mean without commission fee is 0.000000
 
 INFO:root:==============================
 
-INFO:root:average time for data accessing is 0.05932505440711975
-INFO:root:average time for training is 0.02691345000267029
+INFO:root:average time for data accessing is 0.046279972553253175
+INFO:root:average time for training is 0.0056998651027679445
 INFO:root:==============================
 INFO:root:step 5000
 INFO:root:------------------------------
-INFO:root:training loss is tf.Tensor(-1.1606882e-05, shape=(), dtype=float32)
+INFO:root:training loss is tf.Tensor(3.5939753e-08, shape=(), dtype=float32)
 
-INFO:root:the portfolio value on test set is tf.Tensor(1.0549963, shape=(), dtype=float32)
-log_mean is tf.Tensor(7.8730365e-05, shape=(), dtype=float32)
-loss_value is -0.000079
-log mean without commission fee is 0.000081
+INFO:root:the portfolio value on test set is tf.Tensor(0.999994, shape=(), dtype=float32)
+log_mean is tf.Tensor(-1.8216864e-09, shape=(), dtype=float32)
+loss_value is 0.000000
+log mean without commission fee is -0.000000
 
 INFO:root:==============================
 
-INFO:root:average time for data accessing is 0.06102734088897705
-INFO:root:average time for training is 0.02732154393196106
+INFO:root:average time for data accessing is 0.04601054883003235
+INFO:root:average time for training is 0.005799118041992187
 INFO:root:==============================
 INFO:root:step 6000
 INFO:root:------------------------------
-INFO:root:training loss is tf.Tensor(-1.2008923e-05, shape=(), dtype=float32)
+INFO:root:training loss is tf.Tensor(1.3509345e-08, shape=(), dtype=float32)
 
-INFO:root:the portfolio value on test set is tf.Tensor(1.0558614, shape=(), dtype=float32)
-log_mean is tf.Tensor(7.993531e-05, shape=(), dtype=float32)
-loss_value is -0.000080
-log mean without commission fee is 0.000082
+INFO:root:the portfolio value on test set is tf.Tensor(0.99999416, shape=(), dtype=float32)
+log_mean is tf.Tensor(-4.5905817e-09, shape=(), dtype=float32)
+loss_value is 0.000000
+log mean without commission fee is -0.000000
 
 INFO:root:==============================
 
-INFO:root:get better model at 6000 steps, whose test portfolio value is tf.Tensor(1.1053483, shape=(), dtype=float32)
-INFO:root:average time for data accessing is 0.04699450254440308
-INFO:root:average time for training is 0.024231041431427004
+INFO:root:average time for data accessing is 0.047528829097747805
+INFO:root:average time for training is 0.0059719645977020265
 INFO:root:==============================
 INFO:root:step 7000
 INFO:root:------------------------------
-INFO:root:training loss is tf.Tensor(-1.3310459e-05, shape=(), dtype=float32)
+INFO:root:training loss is tf.Tensor(8.883596e-09, shape=(), dtype=float32)
 
-INFO:root:the portfolio value on test set is tf.Tensor(1.0556105, shape=(), dtype=float32)
-log_mean is tf.Tensor(7.958828e-05, shape=(), dtype=float32)
-loss_value is -0.000080
-log mean without commission fee is 0.000081
+INFO:root:the portfolio value on test set is tf.Tensor(0.99999624, shape=(), dtype=float32)
+log_mean is tf.Tensor(-2.0402589e-09, shape=(), dtype=float32)
+loss_value is 0.000000
+log mean without commission fee is -0.000000
 
 INFO:root:==============================
 
-INFO:root:average time for data accessing is 0.04631072878837585
-INFO:root:average time for training is 0.023009419679641725
+INFO:root:average time for data accessing is 0.0762343099117279
+INFO:root:average time for training is 0.007461171388626098
 INFO:root:==============================
 INFO:root:step 8000
 INFO:root:------------------------------
-INFO:root:training loss is tf.Tensor(-1.3865805e-05, shape=(), dtype=float32)
+INFO:root:training loss is tf.Tensor(8.865129e-09, shape=(), dtype=float32)
 
-INFO:root:the portfolio value on test set is tf.Tensor(1.0564166, shape=(), dtype=float32)
-log_mean is tf.Tensor(8.0709666e-05, shape=(), dtype=float32)
-loss_value is -0.000081
-log mean without commission fee is 0.000083
+INFO:root:the portfolio value on test set is tf.Tensor(0.9999935, shape=(), dtype=float32)
+log_mean is tf.Tensor(-5.2463767e-09, shape=(), dtype=float32)
+loss_value is 0.000000
+log mean without commission fee is -0.000000
 
 INFO:root:==============================
 
-INFO:root:get better model at 8000 steps, whose test portfolio value is tf.Tensor(1.1226078, shape=(), dtype=float32)
-INFO:root:average time for data accessing is 0.05306472587585449
-INFO:root:average time for training is 0.025222421169281004
+INFO:root:average time for data accessing is 0.06867413830757141
+INFO:root:average time for training is 0.0077728648185729984
 INFO:root:==============================
 INFO:root:step 9000
 INFO:root:------------------------------
-INFO:root:training loss is tf.Tensor(-1.4198526e-05, shape=(), dtype=float32)
+INFO:root:training loss is tf.Tensor(5.446503e-09, shape=(), dtype=float32)
 
-INFO:root:the portfolio value on test set is tf.Tensor(1.0551375, shape=(), dtype=float32)
-log_mean is tf.Tensor(7.892694e-05, shape=(), dtype=float32)
-loss_value is -0.000079
-log mean without commission fee is 0.000081
+INFO:root:the portfolio value on test set is tf.Tensor(1.000002, shape=(), dtype=float32)
+log_mean is tf.Tensor(9.399752e-09, shape=(), dtype=float32)
+loss_value is -0.000000
+log mean without commission fee is 0.000000
 
 INFO:root:==============================
 
-WARNING:tensorflow:Layer cnn_1 is casting an input tensor from dtype float64 to the layer's dtype of float32, which is new behavior in TensorFlow 2.  The layer has dtype float32 because its dtype defaults to floatx.
+INFO:root:average time for data accessing is 0.060147019624710085
+INFO:root:average time for training is 0.007066963911056518
+INFO:root:==============================
+INFO:root:step 10000
+INFO:root:------------------------------
+INFO:root:training loss is tf.Tensor(2.0609534e-08, shape=(), dtype=float32)
 
-If you intended to run this layer in float32, you can safely ignore this warning. If in doubt, this warning is likely only an issue if you are porting a TensorFlow 1.X model to TensorFlow 2.
+INFO:root:the portfolio value on test set is tf.Tensor(0.9999859, shape=(), dtype=float32)
+log_mean is tf.Tensor(-1.6394921e-08, shape=(), dtype=float32)
+loss_value is 0.000000
+log mean without commission fee is -0.000000
 
-To change all layers to have dtype float64 by default, call `tf.keras.backend.set_floatx('float64')`. To change just this layer, pass dtype='float64' to the layer constructor. If you are the author of this layer, you can disable autocasting by passing autocast=False to the base Layer constructor.
+INFO:root:==============================
 
-WARNING:root:the portfolio value train No.0 is tf.Tensor(1.0564166, shape=(), dtype=float32) log_mean is tf.Tensor(8.0709666e-05, shape=(), dtype=float32), the training time is 742 seconds
+INFO:root:average time for data accessing is 0.058272207021713256
+INFO:root:average time for training is 0.007195276737213135
+INFO:root:==============================
+INFO:root:step 11000
+INFO:root:------------------------------
+INFO:root:training loss is tf.Tensor(4.332656e-08, shape=(), dtype=float32)
+
+INFO:root:the portfolio value on test set is tf.Tensor(0.99993956, shape=(), dtype=float32)
+log_mean is tf.Tensor(-7.388644e-08, shape=(), dtype=float32)
+loss_value is 0.000000
+log mean without commission fee is -0.000000
+
+INFO:root:==============================
+
+INFO:root:average time for data accessing is 0.04797697615623474
+INFO:root:average time for training is 0.0061279387474060054
+INFO:root:==============================
+INFO:root:step 12000
+INFO:root:------------------------------
+INFO:root:training loss is tf.Tensor(-3.6183057e-08, shape=(), dtype=float32)
+
+INFO:root:the portfolio value on test set is tf.Tensor(1.0000483, shape=(), dtype=float32)
+log_mean is tf.Tensor(6.346656e-08, shape=(), dtype=float32)
+loss_value is -0.000000
+log mean without commission fee is 0.000000
+
+INFO:root:==============================
+
+INFO:root:average time for data accessing is 0.04257242298126221
+INFO:root:average time for training is 0.0054282951354980465
+INFO:root:==============================
+INFO:root:step 13000
+INFO:root:------------------------------
+INFO:root:training loss is tf.Tensor(3.86888e-08, shape=(), dtype=float32)
+
+INFO:root:the portfolio value on test set is tf.Tensor(0.9999603, shape=(), dtype=float32)
+log_mean is tf.Tensor(-4.8528964e-08, shape=(), dtype=float32)
+loss_value is 0.000000
+log mean without commission fee is -0.000000
+
+INFO:root:==============================
+
+INFO:root:average time for data accessing is 0.04322103023529053
+INFO:root:average time for training is 0.005394868135452271
+INFO:root:==============================
+INFO:root:step 14000
+INFO:root:------------------------------
+INFO:root:training loss is tf.Tensor(9.251007e-10, shape=(), dtype=float32)
+
+INFO:root:the portfolio value on test set is tf.Tensor(0.9999984, shape=(), dtype=float32)
+log_mean is tf.Tensor(-1.9673905e-09, shape=(), dtype=float32)
+loss_value is 0.000000
+log mean without commission fee is -0.000000
+
+INFO:root:==============================
+
+INFO:root:average time for data accessing is 0.06677662444114685
+INFO:root:average time for training is 0.006922955751419067
+INFO:root:==============================
+INFO:root:step 15000
+INFO:root:------------------------------
+INFO:root:training loss is tf.Tensor(2.2668045e-10, shape=(), dtype=float32)
+
+INFO:root:the portfolio value on test set is tf.Tensor(1.0, shape=(), dtype=float32)
+log_mean is tf.Tensor(0.0, shape=(), dtype=float32)
+loss_value is -0.000000
+log mean without commission fee is 0.000000
+
+INFO:root:==============================
+
+INFO:root:average time for data accessing is 0.06418727707862854
+INFO:root:average time for training is 0.006891209602355957
+INFO:root:==============================
+INFO:root:step 16000
+INFO:root:------------------------------
+INFO:root:training loss is tf.Tensor(2.9407174e-10, shape=(), dtype=float32)
+
+INFO:root:the portfolio value on test set is tf.Tensor(0.9999999, shape=(), dtype=float32)
+log_mean is tf.Tensor(-1.4573263e-10, shape=(), dtype=float32)
+loss_value is 0.000000
+log mean without commission fee is -0.000000
+
+INFO:root:==============================
+
+INFO:root:average time for data accessing is 0.04973604130744934
+INFO:root:average time for training is 0.005908435106277466
+INFO:root:==============================
+INFO:root:step 17000
+INFO:root:------------------------------
+INFO:root:training loss is tf.Tensor(2.083008e-10, shape=(), dtype=float32)
+
+INFO:root:the portfolio value on test set is tf.Tensor(1.0, shape=(), dtype=float32)
+log_mean is tf.Tensor(0.0, shape=(), dtype=float32)
+loss_value is -0.000000
+log mean without commission fee is 0.000000
+
+INFO:root:==============================
+
+INFO:root:average time for data accessing is 0.06307960939407349
+INFO:root:average time for training is 0.007005225658416748
+INFO:root:==============================
+INFO:root:step 18000
+INFO:root:------------------------------
+INFO:root:training loss is tf.Tensor(6.739143e-11, shape=(), dtype=float32)
+
+INFO:root:the portfolio value on test set is tf.Tensor(1.0, shape=(), dtype=float32)
+log_mean is tf.Tensor(0.0, shape=(), dtype=float32)
+loss_value is -0.000000
+log mean without commission fee is 0.000000
+
+INFO:root:==============================
+
+INFO:root:select coin online from 2020-05-22 00:40 to 2020-06-21 00:40
+INFO:root:Successfully got coinlist
+DEBUG:root:Selected coins are: ['reversed_USDT', 'ETH', 'XRP', 'XMR', 'LTC', 'BCHABC', 'BCHSV', 'TRX', 'STR', 'ETC', 'DASH']
+INFO:root:feature type list is ['close', 'high', 'low']
+DEBUG:root:buffer_bias is 0.000050
+INFO:root:the number of training examples is 9729, of test examples is 849
+DEBUG:root:the training set is from 31 to 9759
+DEBUG:root:the test set is from 9760 to 10608
+INFO:root:select coin online from 2020-05-22 00:40 to 2020-06-21 00:40
+INFO:root:Successfully got coinlist
+DEBUG:root:Selected coins are: ['reversed_USDT', 'ETH', 'XRP', 'XMR', 'LTC', 'BCHABC', 'BCHSV', 'TRX', 'STR', 'ETC', 'DASH']
+INFO:root:feature type list is ['close', 'high', 'low']
+DEBUG:root:buffer_bias is 0.000050
+INFO:root:the number of training examples is 9729, of test examples is 849
+DEBUG:root:the training set is from 31 to 9759
+DEBUG:root:the test set is from 9760 to 10608
+INFO:root:select coin online from 2020-05-22 00:40 to 2020-06-21 00:40
+INFO:root:Successfully got coinlist
+DEBUG:root:Selected coins are: ['reversed_USDT', 'ETH', 'XRP', 'XMR', 'LTC', 'BCHABC', 'BCHSV', 'TRX', 'STR', 'ETC', 'DASH']
+INFO:root:feature type list is ['close', 'high', 'low']
+DEBUG:root:buffer_bias is 0.000050
+INFO:root:the number of training examples is 9729, of test examples is 849
+DEBUG:root:the training set is from 31 to 9759
+DEBUG:root:the test set is from 9760 to 10608
+INFO:root:select coin online from 2020-05-22 00:40 to 2020-06-21 00:40
+INFO:root:select coin online from 2020-05-22 00:40 to 2020-06-21 00:40
+INFO:root:select coin online from 2020-05-22 00:40 to 2020-06-21 00:40
+INFO:root:select coin online from 2020-05-22 00:40 to 2020-06-21 00:40
+INFO:root:select coin online from 2020-05-22 00:40 to 2020-06-21 00:40
+INFO:root:select coin online from 2020-05-22 00:40 to 2020-06-21 00:40
+INFO:root:Successfully got coinlist
+DEBUG:root:Selected coins are: ['reversed_USDT', 'ETH', 'XRP', 'XMR', 'LTC', 'BCHABC', 'BCHSV', 'TRX', 'STR', 'ETC', 'DASH']
+INFO:root:feature type list is ['close', 'high', 'low']
+DEBUG:root:buffer_bias is 0.000050
+INFO:root:the number of training examples is 9729, of test examples is 849
+DEBUG:root:the training set is from 31 to 9759
+DEBUG:root:the test set is from 9760 to 10608
+INFO:root:select coin online from 2020-05-22 00:40 to 2020-06-21 00:40
+INFO:root:Successfully got coinlist
+DEBUG:root:Selected coins are: ['reversed_USDT', 'ETH', 'XRP', 'XMR', 'LTC', 'BCHABC', 'BCHSV', 'TRX', 'STR', 'ETC', 'DASH']
+INFO:root:feature type list is ['close', 'high', 'low']
+DEBUG:root:buffer_bias is 0.000050
+INFO:root:the number of training examples is 9729, of test examples is 849
+DEBUG:root:the training set is from 31 to 9759
+DEBUG:root:the test set is from 9760 to 10608

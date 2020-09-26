@@ -10,7 +10,6 @@ class Agent:
         
         self.train_config = config['training']        
         self.batch_size = self.train_config['batch_size']
-        self.input_no = self.batch_size
         
         self.input_config = config['input']
         self.coin_no =self.input_config['coin_no']
@@ -19,8 +18,6 @@ class Agent:
         self.feature_no = self.input_config['feature_no']
         
         self.commission_ratio = config['trading']["trading_consumption"]
-        
-        self.pv_vector = None
         
         self.model = CNN(
             self.coin_no, 
@@ -35,45 +32,50 @@ class Agent:
         
         # NOTE: Can be customized
         self.optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
-        
-    #@tf.function
+    
     def train_step(self, batch):
-        
         w = batch['last_w']
         w = tf.reshape(w, [w.shape[0], w.shape[1], 1, 1] )
         X = tf.transpose(batch['X'], [0, 2, 3, 1])   # (coins, time, features) that is, channels last. How tf likes it
         y = batch['y']
-        self.input_no = y.shape[0]
-                
-        with tf.GradientTape() as tape:
-                output = self.model([X, w])
-                                
-                # Compute negative reward
-                loss = self.loss(y, output)
 
-        grads = tape.gradient(loss, self.model.trainable_weights)
-        self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
+        output = self.apply_step(X, w, y)
 
         # Save the model output in PVM
         batch['setw'](output[:, 1:].numpy())
+                
+    @tf.function
+    def apply_step(self, X, w, y):
+        with tf.GradientTape() as tape:
+                output = self.model([X, w])
+                # Compute negative reward
+                loss = self.loss(y, output)
+        grads = tape.gradient(loss, self.model.trainable_weights)
+        self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
+        return output
+    
+    @tf.function
+    def test_step(self, X, w, y):
+        output = self.model([X, w])
+        loss = self.loss(y, output)
+        return loss, output
 
-
+    @tf.function
     def loss(self, y, output):
         #r_t = log(mu_t * y_t dot w_{t-1})
-        self.future_price = tf.concat([tf.ones([self.input_no, 1]), y[:, 0, :]], 1) # Add cash price (always 1)
-        self.future_w = (self.future_price * output) / tf.reduce_sum(self.future_price * output, axis=1)[:, None]
-        self.pv_vector = tf.reduce_sum(output * self.future_price, axis=1) *\
-                           (tf.concat([tf.ones(1), self.pure_pc(output)], 0))
+        input_no = tf.shape(y)[0]
+        future_price = tf.concat([tf.ones([input_no, 1]), y[:, 0, :]], 1) # Add cash price (always 1)
+        future_w = (future_price * output) / tf.reduce_sum(future_price * output, axis=1)[:, None]
+        pv_vector = tf.reduce_sum(output * future_price, axis=1) *\
+                           (tf.concat([tf.ones(1), self.pure_pc(output, input_no, future_w)], 0))
         
-        
-        return -tf.reduce_mean(tf.math.log(self.pv_vector))
-        
+        return -tf.reduce_mean(tf.math.log(pv_vector))
         
     # consumption vector (on each periods)
-    def pure_pc(self, output):
+    def pure_pc(self, output, input_no, future_w):
         c = self.commission_ratio
-        w_t = self.future_w[:self.input_no-1]  # rebalanced
-        w_t1 = output[1:self.input_no]
+        w_t = future_w[:input_no-1]  # rebalanced
+        w_t1 = output[1:input_no]
         mu = 1 - tf.reduce_sum(tf.math.abs(w_t1[:, 1:]-w_t[:, 1:]), axis=1)*c
         """
         mu = 1-3*c+c**2
@@ -99,10 +101,15 @@ class Agent:
         w = tf.reshape(w, [w.shape[0], w.shape[1], 1, 1] )
         X = tf.transpose(batch['X'], [0, 2, 3, 1])   # (coins, time, features) that is, channels last. How tf likes it
         y = batch['y'] 
-        self.input_no = y.shape[0]
 
-        output = self.model([X, w])
-        loss = self.loss(y, output)
+        loss, output = self.test_step(X, w, y)
+
+        # NOTE: can change this later, so it is the output of the graph
+        input_no = y.shape[0]
+        future_price = tf.concat([tf.ones([input_no, 1]), y[:, 0, :]], 1) # Add cash price (always 1)
+        future_w = (future_price * output) / tf.reduce_sum(future_price * output, axis=1)[:, None]
+        self.pv_vector = tf.reduce_sum(output * future_price, axis=1) *\
+                           (tf.concat([tf.ones(1), self.pure_pc(output, input_no, future_w)], 0))
 
         self.portfolio_value = tf.reduce_prod(self.pv_vector)
         self.mean = tf.reduce_mean(self.pv_vector)
@@ -110,7 +117,7 @@ class Agent:
         self.standard_deviation = tf.math.sqrt(tf.reduce_mean((self.pv_vector - self.mean) ** 2))
         self.sharp_ratio = (self.mean - 1) / self.standard_deviation
 
-        self.log_mean_free = tf.math.reduce_mean(tf.math.log(tf.reduce_sum(output * self.future_price,
+        self.log_mean_free = tf.math.reduce_mean(tf.math.log(tf.reduce_sum(output * future_price,
                                                                    axis=1)))
 
         return self.pv_vector, loss, output

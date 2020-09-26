@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import logging
 from src.trainer import Trainer
 from config import config
