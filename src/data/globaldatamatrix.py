@@ -73,9 +73,9 @@ class HistoryManager:
         panel = xr.DataArray(
             dims=['features', 'coins', 'time_index'],
             coords={'features': features, 'coins': coins, 'time_index': time_index}
-        )
+        ).astype('float32')
         # panel = pd.Panel(items=features, major_axis=coins, minor_axis=time_index, dtype=np.float32)
-        # NOTE: Change this part to an xarray
+        # NOTE: Change this part to an pandas multiindex
 
         connection = sqlite3.connect(DATABASE_DIR)
         try:

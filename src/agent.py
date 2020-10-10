@@ -2,14 +2,16 @@ import tensorflow as tf
 import numpy as np 
 import pandas as pd
 
-from src.network import CNN
+from src.network import CNN, CNN_Keras
 
 class Agent:
 
-    def __init__(self, config, restore_dir=None):
+    def __init__(self, config, time_index=None, coins=None, restore_dir=None):
         
         self.train_config = config['training']        
         self.batch_size = self.train_config['batch_size']
+        self.learning_rate = self.train_config['learning_rate']
+        self.layers = config["layers"]
         
         self.input_config = config['input']
         self.coin_no =self.input_config['coin_no']
@@ -18,20 +20,31 @@ class Agent:
         self.feature_no = self.input_config['feature_no']
         
         self.commission_ratio = config['trading']["trading_consumption"]
-        
+
+
         self.model = CNN(
+            self.feature_no,
             self.coin_no, 
             self.window_size,
-            self.feature_no,
-            config['training']['batch_size']
+            self.layers
         )
 
-        if restore_dir:
-            self.model.load_weights(restore_dir)
+        # if restore_dir:
+        #     chkp = tf.train.Checkpoint(model=self.model)
+        #     chkp.restore(restore_dir)
+            # self.model.load_weights(restore_dir)
 
-        
         # NOTE: Can be customized
-        self.optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
+        self.__global_step = tf.Variable(0, trainable=False)
+        learning_rate = tf.compat.v1.train.exponential_decay(self.learning_rate, self.__global_step,
+                                                   self.train_config['decay_steps'], self.train_config['decay_rate'], staircase=True)
+        self.optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate)
+        # self.lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
+        #                                                             initial_learning_rate=self.learning_rate,
+        #                                                             decay_steps=self.train_config['decay_steps'],
+        #                                                             decay_rate=self.train_config['decay_rate'],
+        #                                                             staircase=True)
+        # self.optimizer = tf.keras.optimizers.Adam(learning_rate=self.lr_schedule)
     
     def train_step(self, batch):
         w = batch['last_w']
@@ -44,23 +57,24 @@ class Agent:
         # Save the model output in PVM
         batch['setw'](output[:, 1:].numpy())
                 
-    @tf.function
+    # @tf.function
     def apply_step(self, X, w, y):
         with tf.GradientTape() as tape:
                 output = self.model([X, w])
                 # Compute negative reward
                 loss = self.loss(y, output)
-        grads = tape.gradient(loss, self.model.trainable_weights)
-        self.optimizer.apply_gradients(zip(grads, self.model.trainable_weights))
+                regu_loss = tf.math.add_n(self.model.losses)
+                total_loss = loss + regu_loss
+        grads = tape.gradient(total_loss, self.model.trainable_variables)
+        self.optimizer.apply_gradients(zip(grads, self.model.trainable_variables), global_step = self.__global_step)
         return output
     
-    @tf.function
+    # @tf.function
     def test_step(self, X, w, y):
         output = self.model([X, w])
         loss = self.loss(y, output)
         return loss, output
 
-    @tf.function
     def loss(self, y, output):
         #r_t = log(mu_t * y_t dot w_{t-1})
         input_no = tf.shape(y)[0]
@@ -130,6 +144,7 @@ class Agent:
         assert not np.any(np.isnan(history))
 
         return self.model([history, prev_w])
+        
 
     def recycle(self):
         self.model = CNN(

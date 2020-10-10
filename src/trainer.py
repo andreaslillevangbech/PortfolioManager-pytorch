@@ -8,9 +8,6 @@ from src.data.datamatrices import DataMatrices
 from src.agent import Agent
 
 
-# NOTES
-# Custom metrics and loss for use in tensorboard and possibly the fit and evaluate tf functions
-
 class Trainer:
     def __init__(self, config, agent = None, save_path = None, restore_dir = None, device = "cpu"):
         self.config = config
@@ -20,18 +17,47 @@ class Trainer:
         self.save_path = save_path
 
         self._matrix = DataMatrices.create_from_config(config)
+        self.time_index = self._matrix._DataMatrices__global_data.time_index.values
+        self.coins = self._matrix._DataMatrices__global_data.coins.values
         self.test_set = self._matrix.get_test_set()
         self.training_set = self._matrix.get_training_set()
 
-        self._agent = Agent(config, restore_dir=restore_dir)
+        tf.random.set_seed(self.config["random_seed"])
+        self.device = device
+        self._agent = Agent(config, time_index=self.time_index, coins=self.coins, restore_dir=restore_dir)
 
+        self.keras_test = self._matrix.keras_batch(data="test")
 
-    def init_tensorboard(self, log_file_dir = 'logs/'):
+    def keras_gen(self):
+        step = 0
+        while True:
+            batch = self._matrix.keras_batch()
+            X = tf.transpose(batch['X'], [0, 2, 3, 1]) 
+            y = batch['y']
+            idx = np.array(batch['idx'], dtype='int32')
+            yield ([X, idx], y)
+            step +=1
+
+    def keras_fit(self, logdir='keras_train/fit'):
+        self.__print_upperbound()
+        tensorboard_callback= tf.keras.callbacks.TensorBoard(
+            log_dir=logdir,
+            histogram_freq=1000
+        )
+        self.history = self._agent.model.fit(
+            x = self.keras_gen(),
+            callbacks = [tensorboard_callback],
+            validation_data = self.keras_test,
+            steps_per_epoch = int(self.train_config['steps']) 
+        )
+
+    def __init_tensorboard(self, log_file_dir = 'logs/'):
         current_time = datetime.datetime.now().strftime("%Y%m%d-H%M%S")
         train_log_dir = log_file_dir + '/' + current_time + '/train'
         test_log_dir = log_file_dir + '/' + current_time + '/test'
         self.train_summary_writer = tf.summary.create_file_writer(train_log_dir)
         self.test_summary_writer = tf.summary.create_file_writer(test_log_dir)
+        tf.summary.trace_on(graph=True)
 
     @staticmethod
     def calculate_upperbound(y):
@@ -62,9 +88,10 @@ class Trainer:
             tf.summary.scalar('std', self._agent.standard_deviation, step=step)
             tf.summary.scalar('loss', v_loss, step=step)
             tf.summary.scalar("log_mean_free", self._agent.log_mean_free, step=step)
+            for var in self._agent.model.trainable_variables:
+                tf.summary.histogram(name=var.name, data=var, step=step)
             writer.flush()
 
-        # NOTE: add summary for training set too.
         if not fast_train:
             pv_vector, loss, output = self._agent.evaluate(self.training_set)
             with self.train_summary_writer.as_default() as writer:
@@ -74,8 +101,19 @@ class Trainer:
                 tf.summary.scalar('std', self._agent.standard_deviation, step=step)
                 tf.summary.scalar('loss', loss, step=step)
                 tf.summary.scalar("log_mean_free", self._agent.log_mean_free, step=step)
+
+                for var in self._agent.model.trainable_variables:
+                    tf.summary.histogram(name=var.name, data=var, step=step)
+
                 writer.flush()
 
+        if step==0:
+            with self.train_summary_writer.as_default() as writer:
+                tf.summary.trace_export(
+                    name = "MyModel",
+                    step=0
+                )
+            
         # print 'ouput is %s' % out
         logging.info('='*30)
         logging.info('step %d' % step)
@@ -94,7 +132,8 @@ class Trainer:
             logging.info("get better model at %s steps,"
                          " whose test portfolio value is %s" % (step, self._agent.portfolio_value))
             if self.save_path:
-                self._agent.model.save_weights(self.save_path)
+                self.checkpoint.write(self.save_path)
+                # self._agent.model.save_weights(self.save_path)
         
         # Dunno what this is for.
         self.check_abnormal(self._agent.portfolio_value, output)
@@ -104,15 +143,20 @@ class Trainer:
             logging.info("average portfolio weights {}".format(weigths.mean(axis=0)))
 
     def train(self, log_file_dir = "./tensorboard", index = "0"):
-        #loss_metric = -tf.keras.metrics.Mean()
 
+        self.checkpoint = tf.train.Checkpoint(model=self._agent.model)
         self.__print_upperbound()
-        self.init_tensorboard(log_file_dir)
+        if log_file_dir:
+            if self.device == "cpu":
+                with tf.device("/cpu:0"):
+                    self.__init_tensorboard(log_file_dir)
+            else:
+                self.__init_tensorboard(log_file_dir)
         
         starttime = time.time()
         total_data_time = 0
         total_training_time = 0
-        for i in range(self.train_config['steps']):
+        for i in range(int(self.train_config['steps'])):
             step_start = time.time()
             batch = self._matrix.next_batch()
             finish_data = time.time()

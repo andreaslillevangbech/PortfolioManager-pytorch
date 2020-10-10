@@ -52,7 +52,7 @@ class DataMatrices:
 
         # portfolio vector memory, [time, assets]
         PVM = pd.DataFrame(index=self.__global_data.time_index.values, 
-                                        columns=self.__global_data.coins.values)
+                                    columns=self.__global_data.coins.values, dtype='float32')
         self.__PVM = PVM.fillna(1.0 / self.__coin_no)
 
         self._window_size = window_size
@@ -135,6 +135,16 @@ class DataMatrices:
         appended_index = self._train_ind[-1]
         self.__replay_buffer.append_experience(appended_index)
 
+    def keras_batch(self, data=None):
+        if data=="test":
+            indexs = self._test_ind[(self._window_size):] 
+        else:
+            indexs = [exp.state_index for exp in self.__replay_buffer.next_experience_batch()] 
+        M = [self.get_submatrix(index) for index in indexs]
+        M = np.array(M) 
+        X = M[:, :, :, :-1]
+        y = M[:, :, :, -1] / M[:, 0, None, :, -2]
+        return {"X": X, "y": y, "idx": indexs}
 
     def next_batch(self):
         """
@@ -147,14 +157,13 @@ class DataMatrices:
         return batch
 
     def pack_samples(self, indexs):
-        self.indexs = indexs
         indexs = np.array(indexs)
         last_w = self.__PVM.values[indexs-1, :]
 
         def setw(w):                      # Notice that this function is defined in terms of the specifik indexs
             self.__PVM.iloc[indexs, :] = w    
         M = [self.get_submatrix(index) for index in indexs]
-        M = np.array(M, dtype='float32')
+        M = np.array(M) # , dtype='float32'
         #NOTE: this is so messed up
         X = M[:, :, :, :-1]        # / M[:,0, None, :, -2, None]     X_t tensor normalized by closing price
         y = M[:, :, :, -1] / M[:, 0, None, :, -2]     # y_{t+1} obtained by dividing all features by prev close price
@@ -162,7 +171,7 @@ class DataMatrices:
 
     # volume in y is the volume in next access period
     def get_submatrix(self, ind):
-        return self.global_matrix[:, :, ind-(self._window_size):ind+1]
+        return self.__global_data.values[:, :, ind-(self._window_size):ind+1]
 
     def get_test_set(self):
         return self.pack_samples(self._test_ind[(self._window_size):]) # Make sure you dont use prices in the test sample that were used in training
