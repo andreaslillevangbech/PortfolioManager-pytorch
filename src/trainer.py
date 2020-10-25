@@ -1,8 +1,11 @@
 import datetime
-import tensorflow as tf
+import os
 import logging
 import time
 import numpy as np
+import torch
+from torch.utils.tensorboard import SummaryWriter
+from tqdm import trange
 
 from src.data.datamatrices import DataMatrices
 from src.agent import Agent
@@ -22,42 +25,25 @@ class Trainer:
         self.test_set = self._matrix.get_test_set()
         self.training_set = self._matrix.get_training_set()
 
-        tf.random.set_seed(self.config["random_seed"])
+        torch.random.manual_seed(config["random_seed"])
         self.device = device
-        self._agent = Agent(config, time_index=self.time_index, coins=self.coins, restore_dir=restore_dir)
-
-        self.keras_test = self._matrix.keras_batch(data="test")
-
-    def keras_gen(self):
-        step = 0
-        while True:
-            batch = self._matrix.keras_batch()
-            X = tf.transpose(batch['X'], [0, 2, 3, 1]) 
-            y = batch['y']
-            idx = np.array(batch['idx'], dtype='int32')
-            yield ([X, idx], y)
-            step +=1
-
-    def keras_fit(self, logdir='keras_train/fit'):
-        self.__print_upperbound()
-        tensorboard_callback= tf.keras.callbacks.TensorBoard(
-            log_dir=logdir,
-            histogram_freq=1000
-        )
-        self.history = self._agent.model.fit(
-            x = self.keras_gen(),
-            callbacks = [tensorboard_callback],
-            validation_data = self.keras_test,
-            steps_per_epoch = int(self.train_config['steps']) 
-        )
+        self._agent = Agent(
+            config,
+            time_index=self.time_index, 
+            coins=self.coins, 
+            restore_dir=restore_dir,
+            device=device)
 
     def __init_tensorboard(self, log_file_dir = 'logs/'):
-        current_time = datetime.datetime.now().strftime("%Y%m%d-H%M%S")
-        train_log_dir = log_file_dir + '/' + current_time + '/train'
-        test_log_dir = log_file_dir + '/' + current_time + '/test'
-        self.train_summary_writer = tf.summary.create_file_writer(train_log_dir)
-        self.test_summary_writer = tf.summary.create_file_writer(test_log_dir)
-        tf.summary.trace_on(graph=True)
+        # current_time = datetime.datetime.now().strftime("%Y%m%d-H%M%S")
+        train_log_dir = os.path.join(log_file_dir, 'train')
+        test_log_dir = os.path.join(log_file_dir, 'test')
+        self.train_writer = SummaryWriter(train_log_dir)
+        self.test_writer = SummaryWriter(test_log_dir)
+        network_writer = SummaryWriter(os.path.join(log_file_dir, 'graph'))
+        X, w, _, _ = self.next_batch()
+        network_writer.add_graph(self._agent.model, [X, w])
+        network_writer.close()
 
     @staticmethod
     def calculate_upperbound(y):
@@ -71,48 +57,58 @@ class Trainer:
         upperbound_test = self.calculate_upperbound(self.test_set["y"])
         logging.info("upper bound in test is %s" % upperbound_test)
 
+    def _evaluate(self, set_name):
+        if set_name=="test":
+            batch = self.test_set
+        elif set_name == "training":
+            batch = self.training_set
+        else:
+            raise ValueError()
+        w = torch.tensor(batch['last_w'])
+        w = w[:, None, : , None] # Concat along dim=1, the features dim)
+        X = torch.tensor(batch['X'])
+        y = torch.tensor(batch['y']) 
+        pv_vector, loss, output = self._agent.evaluate(X, w, y)
+        return pv_vector, loss, output
+
     def log_between_steps(self, step):
         fast_train = self.train_config["fast_train"]
 
         # Summary on test set. Evaluating the agent updates the agents metrics
-        pv_vector, v_loss, v_output = self._agent.evaluate(self.test_set)
+        pv_vector, v_loss, v_output = self._evaluate("test")
         # Get some stats
         v_pv = self._agent.portfolio_value
         v_log_mean = self._agent.log_mean
         log_mean_free = self._agent.log_mean_free
 
-        with self.test_summary_writer.as_default() as writer:
-            tf.summary.scalar('portfolio value', self._agent.portfolio_value, step=step)
-            tf.summary.scalar('mean', self._agent.mean, step=step)
-            tf.summary.scalar('log_mean', self._agent.log_mean, step=step)
-            tf.summary.scalar('std', self._agent.standard_deviation, step=step)
-            tf.summary.scalar('loss', v_loss, step=step)
-            tf.summary.scalar("log_mean_free", self._agent.log_mean_free, step=step)
-            for var in self._agent.model.trainable_variables:
-                tf.summary.histogram(name=var.name, data=var, step=step)
-            writer.flush()
+        self.test_writer.add_scalar('portfolio value', self._agent.portfolio_value, global_step=step)
+        self.test_writer.add_scalar('mean', self._agent.mean, global_step=step)
+        self.test_writer.add_scalar('log_mean', self._agent.log_mean, global_step=step)
+        self.test_writer.add_scalar('std', self._agent.standard_deviation, global_step=step)
+        self.test_writer.add_scalar('loss', v_loss,global_step=step)
+        self.test_writer.add_scalar("log_mean_free", self._agent.log_mean_free,global_step=step)
+        for name, param in self._agent.model.named_parameters():
+            self.test_writer.add_histogram(name, param, global_step=step)
+
+        # Save model
+        if v_pv > self.best_metric:
+            self.best_metric = v_pv
+            logging.info("get better model at %s steps,"
+                         " whose test portfolio value is %s" % (step, self._agent.portfolio_value))
+            if self.save_path:
+                torch.save(self._agent.model.state_dict(), self.save_path)
+                # self._agent.model.save_weights(self.save_path)
 
         if not fast_train:
-            pv_vector, loss, output = self._agent.evaluate(self.training_set)
-            with self.train_summary_writer.as_default() as writer:
-                tf.summary.scalar('portfolio value', self._agent.portfolio_value, step=step)
-                tf.summary.scalar('mean', self._agent.mean, step=step)
-                tf.summary.scalar('log_mean', self._agent.log_mean, step=step)
-                tf.summary.scalar('std', self._agent.standard_deviation, step=step)
-                tf.summary.scalar('loss', loss, step=step)
-                tf.summary.scalar("log_mean_free", self._agent.log_mean_free, step=step)
-
-                for var in self._agent.model.trainable_variables:
-                    tf.summary.histogram(name=var.name, data=var, step=step)
-
-                writer.flush()
-
-        if step==0:
-            with self.train_summary_writer.as_default() as writer:
-                tf.summary.trace_export(
-                    name = "MyModel",
-                    step=0
-                )
+            pv_vector, loss, output = self._evaluate("training")
+            self.train_writer.add_scalar('portfolio value', self._agent.portfolio_value,global_step=step)
+            self.train_writer.add_scalar('mean', self._agent.mean,global_step=step)
+            self.train_writer.add_scalar('log_mean', self._agent.log_mean,global_step=step)
+            self.train_writer.add_scalar('std', self._agent.standard_deviation,global_step=step)
+            self.train_writer.add_scalar('loss', loss,global_step=step)
+            self.train_writer.add_scalar("log_mean_free", self._agent.log_mean_free,global_step=step)
+            for name, param in self._agent.model.named_parameters():
+                self.train_writer.add_histogram(name, param,global_step=step)
             
         # print 'ouput is %s' % out
         logging.info('='*30)
@@ -125,16 +121,6 @@ class Trainer:
                      (v_pv, v_log_mean, v_loss, log_mean_free))
         logging.info('='*30+"\n")
 
-
-        # NOTE: Save model
-        if v_pv > self.best_metric:
-            self.best_metric = v_pv
-            logging.info("get better model at %s steps,"
-                         " whose test portfolio value is %s" % (step, self._agent.portfolio_value))
-            if self.save_path:
-                self.checkpoint.write(self.save_path)
-                # self._agent.model.save_weights(self.save_path)
-        
         # Dunno what this is for.
         self.check_abnormal(self._agent.portfolio_value, output)
 
@@ -142,27 +128,28 @@ class Trainer:
         if portfolio_value == 1.0:
             logging.info("average portfolio weights {}".format(weigths.mean(axis=0)))
 
+    def next_batch(self):
+        batch = self._matrix.next_batch()
+        w = torch.tensor(batch['last_w'])
+        w = w[:, None, : , None] # Concat along dim=1, the features dim)
+        X = torch.tensor(batch['X'])
+        y = torch.tensor(batch['y'])
+        return X, w, y, batch['setw']
+
     def train(self, log_file_dir = "./tensorboard", index = "0"):
 
-        self.checkpoint = tf.train.Checkpoint(model=self._agent.model)
         self.__print_upperbound()
-        if log_file_dir:
-            if self.device == "cpu":
-                with tf.device("/cpu:0"):
-                    self.__init_tensorboard(log_file_dir)
-            else:
-                self.__init_tensorboard(log_file_dir)
+        self.__init_tensorboard(log_file_dir)
         
         starttime = time.time()
         total_data_time = 0
         total_training_time = 0
         for i in range(int(self.train_config['steps'])):
             step_start = time.time()
-            batch = self._matrix.next_batch()
+            X, w, y, setw = self.next_batch()
             finish_data = time.time()
             total_data_time += (finish_data - step_start)
-            # Do a train step
-            self._agent.train_step(batch)
+            self._agent.train_step(X, w, y, setw=setw)
             total_training_time += time.time() - finish_data 
             if i % 1000 == 0 and log_file_dir:
                 logging.info("average time for data accessing is %s"%(total_data_time/1000))
@@ -175,7 +162,7 @@ class Trainer:
             best_agent = Agent(self.config, restore_dir=self.save_path)
             self._agent = best_agent
 
-        pv_vector, loss, output = self._agent.evaluate(self.test_set)
+        pv_vector, loss, output = self._evaluate("test")
         pv = self._agent.portfolio_value
         log_mean = self._agent.log_mean
         logging.warning('the portfolio value train No.%s is %s log_mean is %s,'

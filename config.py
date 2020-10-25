@@ -6,7 +6,7 @@ config = {
         {"type": "EIIE_Output_WithW","regularizer": "L2", "weight_decay": 5e-8}
     ],
     'training':{
-        'steps':400000,
+        'steps':5000,
         'batch_size': 50,
         'buffer_bias': 5e-5,
         'learning_rate': 0.00028,
@@ -20,7 +20,7 @@ config = {
         'coin_no': 11,
         'window_size': 50,
         'feature_no': 3,
-        'start_date': "2018/07/01",
+        'start_date': "2020/03/01",
         'end_date': "2020/07/01",
         "test_portion": 0.08,
         "volume_average_days": 30,

@@ -1,0 +1,85 @@
+INFO:root:select coin online from 2020-05-22 07:45 to 2020-06-21 07:45
+INFO:root:Successfully got coinlist
+DEBUG:root:Selected coins are: ['reversed_USDT', 'ETH', 'XRP', 'XMR', 'LTC', 'BCHABC', 'BCHSV', 'TRX', 'STR', 'ETC', 'DASH']
+INFO:root:feature type list is ['close', 'high', 'low']
+DEBUG:root:buffer_bias is 0.000050
+INFO:root:the number of training examples is 5338, of test examples is 469
+DEBUG:root:the training set is from 50 to 5387
+DEBUG:root:the test set is from 5388 to 5856
+INFO:root:upper bound in test is 6.236072048546122
+INFO:root:average time for data accessing is 5.729198455810547e-07
+INFO:root:average time for training is 2.8800010681152345e-05
+INFO:root:get better model at 0 steps, whose test portfolio value is tensor(0.9857, grad_fn=<ProdBackward0>)
+INFO:root:==============================
+INFO:root:step 0
+INFO:root:------------------------------
+INFO:root:training loss is tensor(3.1290e-05, grad_fn=<NegBackward>)
+
+INFO:root:the portfolio value on test set is tensor(0.9857, grad_fn=<ProdBackward0>)
+log_mean is tensor(-3.4302e-05, grad_fn=<MeanBackward0>)
+loss_value is 0.000034
+log mean without commission fee is -0.000030
+
+INFO:root:==============================
+
+INFO:root:average time for data accessing is 0.000749082088470459
+INFO:root:average time for training is 0.007662866115570068
+INFO:root:get better model at 1000 steps, whose test portfolio value is tensor(0.9859, grad_fn=<ProdBackward0>)
+INFO:root:==============================
+INFO:root:step 1000
+INFO:root:------------------------------
+INFO:root:training loss is tensor(3.0858e-05, grad_fn=<NegBackward>)
+
+INFO:root:the portfolio value on test set is tensor(0.9859, grad_fn=<ProdBackward0>)
+log_mean is tensor(-3.3855e-05, grad_fn=<MeanBackward0>)
+loss_value is 0.000034
+log mean without commission fee is -0.000030
+
+INFO:root:==============================
+
+INFO:root:average time for data accessing is 0.0005856544971466064
+INFO:root:average time for training is 0.005952942848205567
+INFO:root:get better model at 2000 steps, whose test portfolio value is tensor(0.9861, grad_fn=<ProdBackward0>)
+INFO:root:==============================
+INFO:root:step 2000
+INFO:root:------------------------------
+INFO:root:training loss is tensor(3.0356e-05, grad_fn=<NegBackward>)
+
+INFO:root:the portfolio value on test set is tensor(0.9861, grad_fn=<ProdBackward0>)
+log_mean is tensor(-3.3340e-05, grad_fn=<MeanBackward0>)
+loss_value is 0.000033
+log mean without commission fee is -0.000030
+
+INFO:root:==============================
+
+INFO:root:average time for data accessing is 0.0005592639446258545
+INFO:root:average time for training is 0.0056828980445861816
+INFO:root:get better model at 3000 steps, whose test portfolio value is tensor(0.9866, grad_fn=<ProdBackward0>)
+INFO:root:==============================
+INFO:root:step 3000
+INFO:root:------------------------------
+INFO:root:training loss is tensor(2.9374e-05, grad_fn=<NegBackward>)
+
+INFO:root:the portfolio value on test set is tensor(0.9866, grad_fn=<ProdBackward0>)
+log_mean is tensor(-3.2296e-05, grad_fn=<MeanBackward0>)
+loss_value is 0.000032
+log mean without commission fee is -0.000029
+
+INFO:root:==============================
+
+INFO:root:average time for data accessing is 0.0005660128593444825
+INFO:root:average time for training is 0.005944549798965454
+INFO:root:get better model at 4000 steps, whose test portfolio value is tensor(0.9870, grad_fn=<ProdBackward0>)
+INFO:root:==============================
+INFO:root:step 4000
+INFO:root:------------------------------
+INFO:root:training loss is tensor(2.8297e-05, grad_fn=<NegBackward>)
+
+INFO:root:the portfolio value on test set is tensor(0.9870, grad_fn=<ProdBackward0>)
+log_mean is tensor(-3.1163e-05, grad_fn=<MeanBackward0>)
+loss_value is 0.000031
+log mean without commission fee is -0.000028
+
+INFO:root:==============================
+
+WARNING:root:the portfolio value train No.0 is tensor(0.9870, grad_fn=<ProdBackward0>) log_mean is tensor(-3.1163e-05, grad_fn=<MeanBackward0>), the training time is 36 seconds

@@ -163,8 +163,8 @@ class DataMatrices:
         def setw(w):                      # Notice that this function is defined in terms of the specifik indexs
             self.__PVM.iloc[indexs, :] = w    
         M = [self.get_submatrix(index) for index in indexs]
-        M = np.array(M) # , dtype='float32'
-        #NOTE: this is so messed up
+        M = np.array(M) 
+        # M is features, coins, time
         X = M[:, :, :, :-1]        # / M[:,0, None, :, -2, None]     X_t tensor normalized by closing price
         y = M[:, :, :, -1] / M[:, 0, None, :, -2]     # y_{t+1} obtained by dividing all features by prev close price
         return {"X": X, "y": y, "last_w": last_w, "setw": setw}

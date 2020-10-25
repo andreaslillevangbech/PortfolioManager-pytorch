@@ -1,96 +1,64 @@
-import tensorflow as tf
-import numpy as np 
+import torch
+import numpy as np
 import pandas as pd
 
-from src.network import CNN, CNN_Keras
+from src.network import CNN
 
 class Agent:
 
-    def __init__(self, config, time_index=None, coins=None, restore_dir=None):
-        
-        self.train_config = config['training']        
-        self.batch_size = self.train_config['batch_size']
+    def __init__(self, config, time_index=None, coins=None, restore_dir=None, device="cpu"):
+
+        self.config = config
+        self.train_config = config['training']
         self.learning_rate = self.train_config['learning_rate']
-        self.layers = config["layers"]
-        
+
         self.input_config = config['input']
         self.coin_no =self.input_config['coin_no']
         self.window_size = self.input_config['window_size']
-        self.global_period = self.input_config["global_period"]
         self.feature_no = self.input_config['feature_no']
-        
-        self.commission_ratio = config['trading']["trading_consumption"]
 
+        self.commission_ratio = config['trading']["trading_consumption"]
 
         self.model = CNN(
             self.feature_no,
-            self.coin_no, 
+            self.coin_no,
             self.window_size,
-            self.layers
+            config["layers"],
+            device = device
         )
+        if restore_dir:
+            self.model.load_state_dict(torch.load(restore_dir))
 
-        # if restore_dir:
-        #     chkp = tf.train.Checkpoint(model=self.model)
-        #     chkp.restore(restore_dir)
-            # self.model.load_weights(restore_dir)
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
 
-        # NOTE: Can be customized
-        self.__global_step = tf.Variable(0, trainable=False)
-        learning_rate = tf.compat.v1.train.exponential_decay(self.learning_rate, self.__global_step,
-                                                   self.train_config['decay_steps'], self.train_config['decay_rate'], staircase=True)
-        self.optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate)
-        # self.lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
-        #                                                             initial_learning_rate=self.learning_rate,
-        #                                                             decay_steps=self.train_config['decay_steps'],
-        #                                                             decay_rate=self.train_config['decay_rate'],
-        #                                                             staircase=True)
-        # self.optimizer = tf.keras.optimizers.Adam(learning_rate=self.lr_schedule)
-    
-    def train_step(self, batch):
-        w = batch['last_w']
-        w = tf.reshape(w, [w.shape[0], w.shape[1], 1, 1] )
-        X = tf.transpose(batch['X'], [0, 2, 3, 1])   # (coins, time, features) that is, channels last. How tf likes it
-        y = batch['y']
+    def train_step(self, X, w, y, setw):
+        output = self.model(X, w)
+        loss = self.loss(output, y)
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
+        #NOTE: ADD regu loss
 
-        output = self.apply_step(X, w, y)
+        # Update weights in PVM
+        setw(output[:, 1:].detach().numpy())
 
-        # Save the model output in PVM
-        batch['setw'](output[:, 1:].numpy())
-                
-    # @tf.function
-    def apply_step(self, X, w, y):
-        with tf.GradientTape() as tape:
-                output = self.model([X, w])
-                # Compute negative reward
-                loss = self.loss(y, output)
-                regu_loss = tf.math.add_n(self.model.losses)
-                total_loss = loss + regu_loss
-        grads = tape.gradient(total_loss, self.model.trainable_variables)
-        self.optimizer.apply_gradients(zip(grads, self.model.trainable_variables), global_step = self.__global_step)
-        return output
-    
-    # @tf.function
-    def test_step(self, X, w, y):
-        output = self.model([X, w])
-        loss = self.loss(y, output)
-        return loss, output
-
-    def loss(self, y, output):
+    # NOTE: Loss should be torch
+    def loss(self, output, y):
         #r_t = log(mu_t * y_t dot w_{t-1})
-        input_no = tf.shape(y)[0]
-        future_price = tf.concat([tf.ones([input_no, 1]), y[:, 0, :]], 1) # Add cash price (always 1)
-        future_w = (future_price * output) / tf.reduce_sum(future_price * output, axis=1)[:, None]
-        pv_vector = tf.reduce_sum(output * future_price, axis=1) *\
-                           (tf.concat([tf.ones(1), self.pure_pc(output, input_no, future_w)], 0))
-        
-        return -tf.reduce_mean(tf.math.log(pv_vector))
-        
+        input_no = y.shape[0]
+        future_price = torch.cat([torch.ones((input_no, 1)), y[:, 0, :]], dim=1) # Add cash price (always 1)
+        future_w = (future_price * output) / torch.sum(future_price * output, dim=1)[:, None]
+        pv_vector = torch.sum(output * future_price, dim=1) *\
+                           (torch.cat([torch.ones(1), self.pure_pc(output, input_no, future_w)], dim=0))
+
+        return -torch.mean(torch.log(pv_vector))
+
     # consumption vector (on each periods)
     def pure_pc(self, output, input_no, future_w):
         c = self.commission_ratio
         w_t = future_w[:input_no-1]  # rebalanced
         w_t1 = output[1:input_no]
-        mu = 1 - tf.reduce_sum(tf.math.abs(w_t1[:, 1:]-w_t[:, 1:]), axis=1)*c
+        mu = 1 - torch.sum(torch.abs(w_t1[:, 1:]-w_t[:, 1:]), dim=1)*c
         """
         mu = 1-3*c+c**2
 
@@ -110,29 +78,28 @@ class Agent:
         return mu
 
 
-    def evaluate(self, batch):
-        w = batch['last_w']
-        w = tf.reshape(w, [w.shape[0], w.shape[1], 1, 1] )
-        X = tf.transpose(batch['X'], [0, 2, 3, 1])   # (coins, time, features) that is, channels last. How tf likes it
-        y = batch['y'] 
+    def test_step(self, X, w, y):
+        output = self.model(X, w)
+        loss = self.loss(output, y)
+        return loss, output
 
+    def evaluate(self, X, w, y):
         loss, output = self.test_step(X, w, y)
 
-        # NOTE: can change this later, so it is the output of the graph
         input_no = y.shape[0]
-        future_price = tf.concat([tf.ones([input_no, 1]), y[:, 0, :]], 1) # Add cash price (always 1)
-        future_w = (future_price * output) / tf.reduce_sum(future_price * output, axis=1)[:, None]
-        self.pv_vector = tf.reduce_sum(output * future_price, axis=1) *\
-                           (tf.concat([tf.ones(1), self.pure_pc(output, input_no, future_w)], 0))
+        future_price = torch.cat([torch.ones((input_no, 1)), y[:, 0, :]], dim=1) # Add cash price (always 1)
+        future_w = (future_price * output) / torch.sum(future_price * output, dim=1)[:, None]
+        self.pv_vector = torch.sum(output * future_price, dim=1) *\
+                           (torch.cat([torch.ones(1), self.pure_pc(output, input_no, future_w)], dim=0))
 
-        self.portfolio_value = tf.reduce_prod(self.pv_vector)
-        self.mean = tf.reduce_mean(self.pv_vector)
-        self.log_mean = tf.reduce_mean(tf.math.log(self.pv_vector))
-        self.standard_deviation = tf.math.sqrt(tf.reduce_mean((self.pv_vector - self.mean) ** 2))
+        self.portfolio_value = torch.prod(self.pv_vector)
+        self.mean = torch.mean(self.pv_vector)
+        self.log_mean = torch.mean(torch.log(self.pv_vector))
+        self.standard_deviation = torch.sqrt(torch.mean((self.pv_vector - self.mean) ** 2))
         self.sharp_ratio = (self.mean - 1) / self.standard_deviation
 
-        self.log_mean_free = tf.math.reduce_mean(tf.math.log(tf.reduce_sum(output * future_price,
-                                                                   axis=1)))
+        self.log_mean_free = torch.mean(torch.log(torch.sum(output * future_price,
+                                                                   dim=1)))
 
         return self.pv_vector, loss, output
 
@@ -143,13 +110,5 @@ class Agent:
         assert not np.any(np.isnan(prev_w))
         assert not np.any(np.isnan(history))
 
-        return self.model([history, prev_w])
-        
+        return self.model(history, prev_w)
 
-    def recycle(self):
-        self.model = CNN(
-            self.coin_no, 
-            self.window_size,
-            self.feature_no,
-            self.train_config['batch_size']
-        )
