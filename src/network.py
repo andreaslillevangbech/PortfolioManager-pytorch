@@ -23,6 +23,7 @@ class CNN(nn.Module):
         self.b = nn.Parameter(b)
 
     def forward(self, x, w):
+        x = x / x[:, 0, None, :, -1, None]
         x = self.conv1(x)
         x = F.relu(x)
         x = self.conv2(x)

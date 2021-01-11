@@ -165,7 +165,7 @@ class DataMatrices:
         M = [self.get_submatrix(index) for index in indexs]
         M = np.array(M) 
         # M is features, coins, time
-        X = M[:, :, :, :-1]        # / M[:,0, None, :, -2, None]     X_t tensor normalized by closing price
+        X = M[:, :, :, :-1] 
         y = M[:, :, :, -1] / M[:, 0, None, :, -2]     # y_{t+1} obtained by dividing all features by prev close price
         return {"X": X, "y": y, "last_w": last_w, "setw": setw}
 
@@ -174,7 +174,7 @@ class DataMatrices:
         return self.__global_data.values[:, :, ind-(self._window_size):ind+1]
 
     def get_test_set(self):
-        return self.pack_samples(self._test_ind[(self._window_size):]) # Make sure you dont use prices in the test sample that were used in training
+        return self.pack_samples(self._test_ind[(self._window_size+1):]) # Make sure you dont use prices in the test sample that were used in training
 
     def get_training_set(self):
         return self.pack_samples(self._train_ind)

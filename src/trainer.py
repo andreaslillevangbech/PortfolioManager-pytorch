@@ -108,7 +108,9 @@ class Trainer:
             self.train_writer.add_scalar('loss', loss,global_step=step)
             self.train_writer.add_scalar("log_mean_free", self._agent.log_mean_free,global_step=step)
             for name, param in self._agent.model.named_parameters():
-                self.train_writer.add_histogram(name, param,global_step=step)
+                self.train_writer.add_histogram(name, param, global_step=step)
+            for name, p in self._agent.model.named_parameters():
+                self.train_writer.add_histogram(name + '/gradient', p.grad, global_step=step)
             
         # print 'ouput is %s' % out
         logging.info('='*30)

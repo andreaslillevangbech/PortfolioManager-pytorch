@@ -46,7 +46,6 @@ class Agent:
         # Update weights in PVM
         setw(output[:, 1:].detach().numpy())
 
-    # NOTE: Loss should be torch
     def loss(self, output, y):
         #r_t = log(mu_t * y_t dot w_{t-1})
         input_no = y.shape[0]
@@ -57,7 +56,6 @@ class Agent:
 
         return -torch.mean(torch.log(pv_vector))
 
-    # consumption vector (on each periods)
     def pure_pc(self, output, input_no, future_w):
         c = self.commission_ratio
         w_t = future_w[:input_no-1]  # rebalanced
